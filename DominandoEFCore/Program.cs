@@ -1,4 +1,6 @@
 ﻿using DominandoEFCore.Data;
+using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Storage;
 using System;
 
 namespace DominandoEFCore
@@ -25,6 +27,9 @@ namespace DominandoEFCore
 
             db1.Database.EnsureCreated();
             db2.Database.EnsureCreated();
+
+            var databaseCreator = db2.GetService<IRelationalDatabaseCreator>();
+            databaseCreator.CreateTables();
         }
     }
 }
