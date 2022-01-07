@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DominandoEFCore.Data;
+using System;
 
 namespace DominandoEFCore
 {
@@ -6,7 +7,13 @@ namespace DominandoEFCore
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("Hello World!");
+            EnsureCreatedAndDeleted();
+        }
+
+        static void EnsureCreatedAndDeleted()
+        {
+            using var db = new ApplicationContext();
+            db.Database.EnsureCreated();
         }
     }
 }
