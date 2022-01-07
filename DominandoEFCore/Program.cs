@@ -100,6 +100,9 @@ namespace DominandoEFCore
             // Segunda opção
             var descricao = "TESTE";
             db.Database.ExecuteSqlRaw("UPDATE Departamentos SET Descricao = {0} WHERE Id = 1", descricao);
+
+            // Terceira opção
+            db.Database.ExecuteSqlInterpolated($"UPDATE Departamentos SET Descricao = {descricao} WHERE Id = 1");
         }
     }
 }
