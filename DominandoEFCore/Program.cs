@@ -12,7 +12,8 @@ namespace DominandoEFCore
         static void Main(string[] args)
         {
             //EnsureCreatedAndDeleted();
-            GapDoEnsureCreated();
+            //GapDoEnsureCreated();
+            HealthCheckBancoDeDados();
         }
 
         static void EnsureCreatedAndDeleted()
@@ -37,19 +38,13 @@ namespace DominandoEFCore
         static void HealthCheckBancoDeDados()
         {
             using var db = new ApplicationContext();
+            var canConnect = db.Database.CanConnect();
 
-            try
+            if (canConnect)
             {
-                // 1 - Método mais utilizado para checar conexão com banco de dados
-                var connection = db.Database.GetDbConnection();
-                connection.Open();
-
-                // 2 - Outro método que possibilita validar a conexão com banco de dados
-                db.Departamentos.Any();
-
                 Console.WriteLine("Posso me conectar");
             }
-            catch (Exception)
+            else
             {
                 Console.WriteLine("Não posso me conectar");
             }
