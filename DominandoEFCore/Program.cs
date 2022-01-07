@@ -13,7 +13,8 @@ namespace DominandoEFCore
         static void EnsureCreatedAndDeleted()
         {
             using var db = new ApplicationContext();
-            db.Database.EnsureCreated();
+            //db.Database.EnsureCreated();
+            db.Database.EnsureDeleted();
         }
     }
 }
