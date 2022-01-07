@@ -85,5 +85,17 @@ namespace DominandoEFCore
 
             Console.WriteLine(mensagem);
         }
+
+        static void ExecuteSQL()
+        {
+            using var db = new ApplicationContext();
+
+            // Primeira opção
+            using (var cmd = db.Database.GetDbConnection().CreateCommand())
+            {
+                cmd.CommandText = "SELECT 1";
+                cmd.ExecuteNonQuery();
+            }
+        }
     }
 }
