@@ -96,6 +96,10 @@ namespace DominandoEFCore
                 cmd.CommandText = "SELECT 1";
                 cmd.ExecuteNonQuery();
             }
+
+            // Segunda opção
+            var descricao = "TESTE";
+            db.Database.ExecuteSqlRaw("UPDATE Departamentos SET Descricao = {0} WHERE Id = 1", descricao);
         }
     }
 }
