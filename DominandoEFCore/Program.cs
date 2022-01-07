@@ -18,7 +18,8 @@ namespace DominandoEFCore
 
             //warmup
             new ApplicationContext().Departamentos.AsNoTracking().Any();
-            GerenciarEstadoDaConexao();
+            GerenciarEstadoDaConexao(false);
+            GerenciarEstadoDaConexao(true);
         }
 
         static void EnsureCreatedAndDeleted()
@@ -55,10 +56,17 @@ namespace DominandoEFCore
             }
         }
 
-        static void GerenciarEstadoDaConexao()
+        static void GerenciarEstadoDaConexao(bool gerenciarEstadoConexao)
         {
             using var db = new ApplicationContext();
             var time = Stopwatch.StartNew();
+
+            var conexao = db.Database.GetDbConnection();
+
+            if (gerenciarEstadoConexao)
+            {
+                conexao.Open();
+            }
 
             for (var i = 0; i < 200; i++)
             {
@@ -66,7 +74,7 @@ namespace DominandoEFCore
             }
 
             time.Stop();
-            var mensagem = $"Tempo: {time.Elapsed.ToString()}";
+            var mensagem = $"Tempo: {time.Elapsed.ToString()}, {gerenciarEstadoConexao}";
 
             Console.WriteLine(mensagem);
         }
