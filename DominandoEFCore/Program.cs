@@ -323,6 +323,8 @@ namespace DominandoEFCore
 
             SetupTiposCarregamentos(db);
 
+            db.ChangeTracker.LazyLoadingEnabled = false;
+
             var departamentos = db.Departamentos.ToList();
 
             foreach (var departamento in departamentos)
