@@ -292,7 +292,10 @@ namespace DominandoEFCore
                 {
                     // O método Collection aceita tanto string como lambda, conforme exemplos abaixo
                     //db.Entry(departamento).Collection("Funcionarios").Load();
-                    db.Entry(departamento).Collection(p => p.Funcionarios).Load();
+                    //db.Entry(departamento).Collection(p => p.Funcionarios).Load();
+
+                    // Carregamento explícito com filtragem de dados
+                    db.Entry(departamento).Collection(p => p.Funcionarios).Query().Where(p => p.Id > 2).ToList();
                 }
 
                 Console.WriteLine("----------------------------------------");
