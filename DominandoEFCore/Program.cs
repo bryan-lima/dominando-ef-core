@@ -123,10 +123,11 @@ namespace DominandoEFCore
                 {
                     Descricao = "Departamento 02"
                 });
+
             db.SaveChanges();
 
-            var descricao = "Departamento 01";
-            db.Database.ExecuteSqlRaw("UPDATE Departamentos SET Descricao = 'DepartamentoAlterado' WHERE Descricao = {0}", descricao);
+            var descricao = "Teste ' or 1='1";
+            db.Database.ExecuteSqlRaw($"UPDATE Departamentos SET Descricao = 'AtaqueSQLInjection' WHERE Descricao = '{descricao}'");
 
             foreach (var departamento in db.Departamentos.AsNoTracking())
             {
