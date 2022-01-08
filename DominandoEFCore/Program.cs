@@ -1,4 +1,5 @@
 ﻿using DominandoEFCore.Data;
+using DominandoEFCore.Domain;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Storage;
@@ -17,13 +18,15 @@ namespace DominandoEFCore
             //HealthCheckBancoDeDados();
 
             //warmup
-            new ApplicationContext().Departamentos.AsNoTracking().Any();
+            //new ApplicationContext().Departamentos.AsNoTracking().Any();
 
-            _count = 0;
-            GerenciarEstadoDaConexao(false);
+            //_count = 0;
+            //GerenciarEstadoDaConexao(false);
 
-            _count = 0;
-            GerenciarEstadoDaConexao(true);
+            //_count = 0;
+            //GerenciarEstadoDaConexao(true);
+
+            SqlInjection();
         }
 
         static void EnsureCreatedAndDeleted()
@@ -103,6 +106,29 @@ namespace DominandoEFCore
 
             // Terceira opção
             db.Database.ExecuteSqlInterpolated($"UPDATE Departamentos SET Descricao = {descricao} WHERE Id = 1");
+        }
+
+        static void SqlInjection()
+        {
+            using var db = new ApplicationContext();
+            db.Database.EnsureDeleted();
+            db.Database.EnsureCreated();
+
+            db.Departamentos.AddRange(
+                new Departamento
+                {
+                    Descricao = "Departamento 01"
+                },
+                new Departamento
+                {
+                    Descricao = "Departamento 02"
+                });
+            db.SaveChanges();
+
+            foreach (var departamento in db.Departamentos.AsNoTracking())
+            {
+                Console.WriteLine($"Id: {departamento.Id}, Descrição: {departamento.Descricao}");
+            }
         }
     }
 }
