@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Storage;
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 
@@ -36,7 +37,9 @@ namespace DominandoEFCore
 
             //MigracoesJaAplicadas();
 
-            ScriptGeralDoBancoDeDados();
+            //ScriptGeralDoBancoDeDados();
+
+            CarregamentoAdiantado();
         }
 
         static void EnsureCreatedAndDeleted()
@@ -201,6 +204,76 @@ namespace DominandoEFCore
             var script = db.Database.GenerateCreateScript();
 
             Console.WriteLine(script);
+        }
+
+        static void CarregamentoAdiantado()
+        {
+            using var db = new ApplicationContext();
+
+            SetupTiposCarregamentos(db);
+
+            var departamentos = db.Departamentos.Include(i => i.Funcionarios);
+
+            foreach (var departamento in departamentos)
+            {
+                Console.WriteLine("----------------------------------------");
+                Console.WriteLine($"Departamento: {departamento.Descricao}");
+
+                if (departamento.Funcionarios?.Any() ?? false)
+                {
+                    foreach (var funcionario in departamento.Funcionarios)
+                    {
+                        Console.WriteLine($"\tFuncionário: {funcionario.Nome}");
+                    }
+                }
+                else
+                {
+                    Console.WriteLine($"\tNenhum funcionário encontrado!");
+                }
+            }
+        }
+
+        static void SetupTiposCarregamentos(ApplicationContext db)
+        {
+            if (!db.Departamentos.Any())
+            {
+                db.Departamentos.AddRange(
+                    new Departamento
+                    {
+                        Descricao = "Departamento 01",
+                        Funcionarios = new List<Funcionario>
+                        {
+                            new Funcionario
+                            {
+                                Nome = "Bryan Lima",
+                                Cpf = "12345678911",
+                                Rg = "1122233"
+                            }
+                        }
+                    },
+                    new Departamento
+                    {
+                        Descricao = "Departamento 02",
+                        Funcionarios = new List<Funcionario>
+                        {
+                            new Funcionario
+                            {
+                                Nome = "Alex Brito",
+                                Cpf = "98765432100",
+                                Rg = "310062"
+                            },
+                            new Funcionario
+                            {
+                                Nome = "Eduardo Pires",
+                                Cpf = "98712364599",
+                                Rg = "110062"
+                            }
+                        }
+                    });
+
+                db.SaveChanges();
+                db.ChangeTracker.Clear();
+            }
         }
     }
 }
