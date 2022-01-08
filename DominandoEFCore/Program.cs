@@ -41,7 +41,9 @@ namespace DominandoEFCore
 
             //CarregamentoAdiantado();
 
-            CarregamentoExplicito();
+            //CarregamentoExplicito();
+
+            CarregamentoLento();
         }
 
         static void EnsureCreatedAndDeleted()
@@ -298,6 +300,33 @@ namespace DominandoEFCore
                     db.Entry(departamento).Collection(p => p.Funcionarios).Query().Where(p => p.Id > 2).ToList();
                 }
 
+                Console.WriteLine("----------------------------------------");
+                Console.WriteLine($"Departamento: {departamento.Descricao}");
+
+                if (departamento.Funcionarios?.Any() ?? false)
+                {
+                    foreach (var funcionario in departamento.Funcionarios)
+                    {
+                        Console.WriteLine($"\tFuncionário: {funcionario.Nome}");
+                    }
+                }
+                else
+                {
+                    Console.WriteLine($"\tNenhum funcionário encontrado!");
+                }
+            }
+        }
+
+        static void CarregamentoLento()
+        {
+            using var db = new ApplicationContext();
+
+            SetupTiposCarregamentos(db);
+
+            var departamentos = db.Departamentos.ToList();
+
+            foreach (var departamento in departamentos)
+            {
                 Console.WriteLine("----------------------------------------");
                 Console.WriteLine($"Departamento: {departamento.Descricao}");
 
