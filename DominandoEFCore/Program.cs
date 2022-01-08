@@ -284,7 +284,7 @@ namespace DominandoEFCore
 
             SetupTiposCarregamentos(db);
 
-            var departamentos = db.Departamentos;
+            var departamentos = db.Departamentos.ToList();
 
             foreach (var departamento in departamentos)
             {
