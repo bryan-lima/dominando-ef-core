@@ -39,7 +39,9 @@ namespace DominandoEFCore
 
             //ScriptGeralDoBancoDeDados();
 
-            CarregamentoAdiantado();
+            //CarregamentoAdiantado();
+
+            CarregamentoExplicito();
         }
 
         static void EnsureCreatedAndDeleted()
@@ -273,6 +275,43 @@ namespace DominandoEFCore
 
                 db.SaveChanges();
                 db.ChangeTracker.Clear();
+            }
+        }
+
+        static void CarregamentoExplicito()
+        {
+            using var db = new ApplicationContext();
+
+            SetupTiposCarregamentos(db);
+
+            var departamentos = db.Departamentos.ToList();
+
+            foreach (var departamento in departamentos)
+            {
+                if (departamento.Id == 2)
+                {
+                    // O método Collection aceita tanto string como lambda, conforme exemplos abaixo
+                    //db.Entry(departamento).Collection("Funcionarios").Load();
+                    //db.Entry(departamento).Collection(p => p.Funcionarios).Load();
+
+                    // Carregamento explícito com filtragem de dados
+                    db.Entry(departamento).Collection(p => p.Funcionarios).Query().Where(p => p.Id > 2).ToList();
+                }
+
+                Console.WriteLine("----------------------------------------");
+                Console.WriteLine($"Departamento: {departamento.Descricao}");
+
+                if (departamento.Funcionarios?.Any() ?? false)
+                {
+                    foreach (var funcionario in departamento.Funcionarios)
+                    {
+                        Console.WriteLine($"\tFuncionário: {funcionario.Nome}");
+                    }
+                }
+                else
+                {
+                    Console.WriteLine($"\tNenhum funcionário encontrado!");
+                }
             }
         }
     }
