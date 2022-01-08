@@ -28,7 +28,9 @@ namespace DominandoEFCore
 
             //SqlInjection();
 
-            MigracoesPendentes();
+            //MigracoesPendentes();
+
+            AplicarMigracaoEmTempoDeExecucao();
         }
 
         static void EnsureCreatedAndDeleted()
@@ -149,6 +151,13 @@ namespace DominandoEFCore
             {
                 Console.WriteLine($"Migração: {migracao}");
             }
+        }
+
+        static void AplicarMigracaoEmTempoDeExecucao()
+        {
+            using var db = new ApplicationContext();
+
+            db.Database.Migrate();
         }
     }
 }
