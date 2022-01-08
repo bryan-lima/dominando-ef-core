@@ -125,6 +125,9 @@ namespace DominandoEFCore
                 });
             db.SaveChanges();
 
+            var descricao = "Departamento 01";
+            db.Database.ExecuteSqlRaw("UPDATE Departamentos SET Descricao = 'DepartamentoAlterado' WHERE Descricao = {0}", descricao);
+
             foreach (var departamento in db.Departamentos.AsNoTracking())
             {
                 Console.WriteLine($"Id: {departamento.Id}, Descrição: {departamento.Descricao}");
