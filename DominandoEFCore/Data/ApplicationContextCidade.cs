@@ -9,10 +9,9 @@ using System.Threading.Tasks;
 
 namespace DominandoEFCore.Data
 {
-    public class ApplicationContext : DbContext
+    public class ApplicationContextCidade : DbContext
     {
-        public DbSet<Departamento> Departamentos { get; set; }
-        public DbSet<Funcionario> Funcionarios { get; set; }
+        public DbSet<Cidade> Cidades { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -20,7 +19,6 @@ namespace DominandoEFCore.Data
 
             optionsBuilder.UseSqlServer(strConnection)
                           .EnableSensitiveDataLogging()
-                          //.UseLazyLoadingProxies()
                           .LogTo(Console.WriteLine, LogLevel.Information);
         }
     }
