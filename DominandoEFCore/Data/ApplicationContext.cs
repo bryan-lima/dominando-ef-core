@@ -20,8 +20,12 @@ namespace DominandoEFCore.Data
 
             optionsBuilder.UseSqlServer(strConnection)
                           .EnableSensitiveDataLogging()
-                          //.UseLazyLoadingProxies()
                           .LogTo(Console.WriteLine, LogLevel.Information);
+        }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<Departamento>().HasQueryFilter(p => !p.Excluido);
         }
     }
 }
