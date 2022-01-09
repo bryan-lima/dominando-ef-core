@@ -20,7 +20,6 @@ namespace DominandoEFCore.Data
 
             optionsBuilder.UseSqlServer(strConnection)
                           .EnableSensitiveDataLogging()
-                          //.UseLazyLoadingProxies()
                           .LogTo(Console.WriteLine, LogLevel.Information);
         }
     }
