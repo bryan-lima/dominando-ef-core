@@ -14,7 +14,9 @@ namespace DominandoEFCore
     {
         static void Main(string[] args)
         {
-            FiltroGlobal();
+            //FiltroGlobal();
+
+            IgnoreFiltroGlobal();
         }
 
         static void FiltroGlobal()
@@ -73,6 +75,19 @@ namespace DominandoEFCore
                 
                 db.SaveChanges();
                 db.ChangeTracker.Clear();
+            }
+        }
+
+        static void IgnoreFiltroGlobal()
+        {
+            using var db = new ApplicationContext();
+            Setup(db);
+
+            var departamentos = db.Departamentos.IgnoreQueryFilters().Where(p => p.Id > 0).ToList();
+
+            foreach (var departamento in departamentos)
+            {
+                Console.WriteLine($"Descrição: {departamento.Descricao} \t Excluído: {departamento.Excluido}");
             }
         }
     }
