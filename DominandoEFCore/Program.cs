@@ -18,7 +18,9 @@ namespace DominandoEFCore
 
             //IgnoreFiltroGlobal();
 
-            ConsultaProjetada();
+            //ConsultaProjetada();
+
+            ConsultaParametrizada();
         }
 
         static void FiltroGlobal()
@@ -110,6 +112,20 @@ namespace DominandoEFCore
                 {
                     Console.WriteLine($"\t Nome: {funcionario}");
                 }
+            }
+        }
+
+        static void ConsultaParametrizada()
+        {
+            using var db = new ApplicationContext();
+            Setup(db);
+
+            var departamentos = db.Departamentos.FromSqlRaw("SELECT * FROM Departamentos")
+                                                .ToList();
+
+            foreach (var departamento in departamentos)
+            {
+                Console.WriteLine($"Descrição: {departamento.Descricao}");
             }
         }
     }
