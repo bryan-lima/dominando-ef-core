@@ -120,7 +120,8 @@ namespace DominandoEFCore
             using var db = new ApplicationContext();
             Setup(db);
 
-            var departamentos = db.Departamentos.FromSqlRaw("SELECT * FROM Departamentos WITH (NOLOCK)")
+            var id = 0;
+            var departamentos = db.Departamentos.FromSqlRaw("SELECT * FROM Departamentos WHERE Id > {0}", id)
                                                 .ToList();
 
             foreach (var departamento in departamentos)
