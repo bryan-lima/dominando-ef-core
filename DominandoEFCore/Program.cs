@@ -1,5 +1,6 @@
 ﻿using DominandoEFCore.Data;
 using DominandoEFCore.Domain;
+using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Storage;
@@ -18,7 +19,9 @@ namespace DominandoEFCore
 
             //IgnoreFiltroGlobal();
 
-            ConsultaProjetada();
+            //ConsultaProjetada();
+
+            ConsultaParametrizada();
         }
 
         static void FiltroGlobal()
@@ -110,6 +113,26 @@ namespace DominandoEFCore
                 {
                     Console.WriteLine($"\t Nome: {funcionario}");
                 }
+            }
+        }
+
+        static void ConsultaParametrizada()
+        {
+            using var db = new ApplicationContext();
+            Setup(db);
+
+            var id = new SqlParameter()
+            {
+                Value = 1,
+                SqlDbType = System.Data.SqlDbType.Int
+            };
+            var departamentos = db.Departamentos.FromSqlRaw("SELECT * FROM Departamentos WHERE Id > {0}", id)
+                                                .Where(departamento => !departamento.Excluido)
+                                                .ToList();
+
+            foreach (var departamento in departamentos)
+            {
+                Console.WriteLine($"Descrição: {departamento.Descricao}");
             }
         }
     }
