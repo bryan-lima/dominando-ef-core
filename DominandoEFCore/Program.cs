@@ -127,6 +127,7 @@ namespace DominandoEFCore
                 SqlDbType = System.Data.SqlDbType.Int
             };
             var departamentos = db.Departamentos.FromSqlRaw("SELECT * FROM Departamentos WHERE Id > {0}", id)
+                                                .Where(departamento => !departamento.Excluido)
                                                 .ToList();
 
             foreach (var departamento in departamentos)
