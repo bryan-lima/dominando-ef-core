@@ -23,7 +23,9 @@ namespace DominandoEFCore
 
             //ConsultaParametrizada();
 
-            ConsultaInterpolada();
+            //ConsultaInterpolada();
+
+            ConsultaComTAG();
         }
 
         static void FiltroGlobal()
@@ -145,6 +147,20 @@ namespace DominandoEFCore
 
             var id = 1;
             var departamentos = db.Departamentos.FromSqlInterpolated($"SELECT * FROM Departamentos WHERE Id > {id}")
+                                                .ToList();
+
+            foreach (var departamento in departamentos)
+            {
+                Console.WriteLine($"Descrição: {departamento.Descricao}");
+            }
+        }
+
+        static void ConsultaComTAG()
+        {
+            using var db = new ApplicationContext();
+            Setup(db);
+
+            var departamentos = db.Departamentos.TagWith("Estou enviando um comentário para o servidor")
                                                 .ToList();
 
             foreach (var departamento in departamentos)
