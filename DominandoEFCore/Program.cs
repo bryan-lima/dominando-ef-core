@@ -160,7 +160,10 @@ namespace DominandoEFCore
             using var db = new ApplicationContext();
             Setup(db);
 
-            var departamentos = db.Departamentos.TagWith("Estou enviando um comentário para o servidor")
+            var departamentos = db.Departamentos.TagWith(@"Estou enviando um comentário para o servidor
+
+                                                         Segundo comentário
+                                                         Terceiro comentário")
                                                 .ToList();
 
             foreach (var departamento in departamentos)
