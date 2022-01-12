@@ -1,5 +1,6 @@
 ﻿using DominandoEFCore.Data;
 using DominandoEFCore.Domain;
+using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Storage;
@@ -120,7 +121,11 @@ namespace DominandoEFCore
             using var db = new ApplicationContext();
             Setup(db);
 
-            var id = 0;
+            var id = new SqlParameter()
+            {
+                Value = 1,
+                SqlDbType = System.Data.SqlDbType.Int
+            };
             var departamentos = db.Departamentos.FromSqlRaw("SELECT * FROM Departamentos WHERE Id > {0}", id)
                                                 .ToList();
 
