@@ -179,17 +179,25 @@ namespace DominandoEFCore
             using var db = new ApplicationContext();
             Setup(db);
 
-            var departamentos = db.Departamentos.Include(departamento => departamento.Funcionarios)
-                                                .ToList();
+            //var departamentos = db.Departamentos.Include(departamento => departamento.Funcionarios)
+            //                                    .ToList();
 
-            foreach (var departamento in departamentos)
+            //foreach (var departamento in departamentos)
+            //{
+            //    Console.WriteLine($"Descrição: {departamento.Descricao}");
+
+            //    foreach (var funcionario in departamento.Funcionarios)
+            //    {
+            //        Console.WriteLine($"\tNome: {funcionario.Nome}");
+            //    }
+            //}
+
+            var funcionarios = db.Funcionarios.Include(funcionario => funcionario.Departamento)
+                                              .ToList();
+
+            foreach (var funcionario in funcionarios)
             {
-                Console.WriteLine($"Descrição: {departamento.Descricao}");
-
-                foreach (var funcionario in departamento.Funcionarios)
-                {
-                    Console.WriteLine($"\tNome: {funcionario.Nome}");
-                }
+                Console.WriteLine($"Nome: {funcionario.Nome} / Descrição Departamento: {funcionario.Departamento.Descricao}");
             }
         }
     }
