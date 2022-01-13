@@ -210,7 +210,7 @@ namespace DominandoEFCore
 
             var departamentos = db.Departamentos.Include(departamento => departamento.Funcionarios)
                                                 .Where(departamento => departamento.Id < 3)
-                                                .AsSplitQuery()
+                                                //.AsSplitQuery()
                                                 .ToList();
 
             foreach (var departamento in departamentos)
