@@ -17,7 +17,9 @@ namespace DominandoEFCore
         {
             //ConsultarDepartamentos();
 
-            DadosSensiveis();
+            //DadosSensiveis();
+
+            HabilitandoBatchSize();
         }
 
         static void ConsultarDepartamentos()
@@ -35,6 +37,25 @@ namespace DominandoEFCore
             string descricao = "Departamento";
             Departamento[] departamentos = db.Departamentos.Where(departamento => departamento.Descricao.Equals(descricao))
                                                            .ToArray();
+        }
+
+        static void HabilitandoBatchSize()
+        {
+            using ApplicationContext db = new ApplicationContext();
+
+            db.Database.EnsureDeleted();
+            db.Database.EnsureCreated();
+
+            for (int i = 0; i < 50; i++)
+            {
+                db.Departamentos.Add(
+                    new Departamento
+                    {
+                        Descricao = $"Departamento {i}"
+                    });
+            }
+
+            db.SaveChanges();
         }
     }
 }
