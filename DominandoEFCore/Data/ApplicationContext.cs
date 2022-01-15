@@ -19,14 +19,7 @@ namespace DominandoEFCore.Data
             const string strConnection = "Data Source=DESKTOP-B76722G\\SQLEXPRESS; Initial Catalog=DominandoEFCore; User ID=developer; Password=dev*10; Integrated Security=True; Persist Security Info=False; Pooling=False; MultipleActiveResultSets=False; Encrypt=False; Trusted_Connection=False";
 
             optionsBuilder.UseSqlServer(strConnection)
-                          //.UseSqlServer(strConnection, options => options.UseQuerySplittingBehavior(QuerySplittingBehavior.SplitQuery))
-                          .EnableSensitiveDataLogging()
                           .LogTo(Console.WriteLine, LogLevel.Information);
-        }
-
-        protected override void OnModelCreating(ModelBuilder modelBuilder)
-        {
-            //modelBuilder.Entity<Departamento>().HasQueryFilter(p => !p.Excluido);
         }
     }
 }
