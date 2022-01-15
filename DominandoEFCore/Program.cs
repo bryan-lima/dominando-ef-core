@@ -35,7 +35,9 @@ namespace DominandoEFCore
 
             //InserirDadosViaProcedure();
 
-            CriarStoredProcedureDeConsulta();
+            //CriarStoredProcedureDeConsulta();
+
+            ConsultaViaProcedure();
         }
 
         static void FiltroGlobal()
@@ -272,6 +274,19 @@ namespace DominandoEFCore
             using var db = new ApplicationContext();
 
             db.Database.ExecuteSqlRaw(getDepartamentos);
+        }
+
+        static void ConsultaViaProcedure()
+        {
+            using var db = new ApplicationContext();
+
+            var departamentos = db.Departamentos.FromSqlRaw("EXECUTE GetDepartamentos @p0", "Departamento")
+                                                .ToList();
+
+            foreach (var departamento in departamentos)
+            {
+                Console.WriteLine(departamento.Descricao);
+            }
         }
     }
 }
