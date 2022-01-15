@@ -282,7 +282,8 @@ namespace DominandoEFCore
 
             var dep = new SqlParameter("@dep", "Departamento");
 
-            var departamentos = db.Departamentos.FromSqlRaw("EXECUTE GetDepartamentos @dep", dep)
+            var departamentos = db.Departamentos.FromSqlInterpolated($"EXECUTE GetDepartamentos {dep}")
+                                                //.FromSqlRaw("EXECUTE GetDepartamentos @dep", dep)
                                                 .ToList();
 
             foreach (var departamento in departamentos)
