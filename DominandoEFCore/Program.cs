@@ -15,7 +15,9 @@ namespace DominandoEFCore
     {
         static void Main(string[] args)
         {
-            ConsultarDepartamentos();
+            //ConsultarDepartamentos();
+
+            DadosSensiveis();
         }
 
         static void ConsultarDepartamentos()
@@ -23,6 +25,15 @@ namespace DominandoEFCore
             using ApplicationContext db = new ApplicationContext();
 
             Departamento[] departamentos = db.Departamentos.Where(departamento => departamento.Id > 0)
+                                                           .ToArray();
+        }
+
+        static void DadosSensiveis()
+        {
+            using ApplicationContext db = new ApplicationContext();
+
+            string descricao = "Departamento";
+            Departamento[] departamentos = db.Departamentos.Where(departamento => departamento.Descricao.Equals(descricao))
                                                            .ToArray();
         }
     }
