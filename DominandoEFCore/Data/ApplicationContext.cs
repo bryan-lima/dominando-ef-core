@@ -21,7 +21,7 @@ namespace DominandoEFCore.Data
 
             optionsBuilder.UseSqlServer(strConnection)
                           //.LogTo(Console.WriteLine, LogLevel.Information)
-                          .LogTo(Console.WriteLine, new[] { RelationalEventId.CommandExecuted });
+                          .LogTo(Console.WriteLine, new[] { CoreEventId.ContextInitialized, RelationalEventId.CommandExecuted });
         }
     }
 }
