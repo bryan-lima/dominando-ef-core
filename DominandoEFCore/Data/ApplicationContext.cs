@@ -28,7 +28,7 @@ namespace DominandoEFCore.Data
                           //       new[] { CoreEventId.ContextInitialized, RelationalEventId.CommandExecuted }, 
                           //       LogLevel.Information,
                           //       DbContextLoggerOptions.LocalTime | DbContextLoggerOptions.SingleLine)
-                          .LogTo(_writer.WriteLine);
+                          .LogTo(_writer.WriteLine, LogLevel.Information);
         }
 
         public override void Dispose()
