@@ -64,6 +64,8 @@ namespace DominandoEFCore
         {
             using ApplicationContext db = new ApplicationContext();
 
+            db.Database.SetCommandTimeout(10);
+
             db.Database.ExecuteSqlRaw("WAITFOR DELAY '00:00:07'; SELECT 1");
         }
     }
