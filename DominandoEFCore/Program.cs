@@ -19,7 +19,9 @@ namespace DominandoEFCore
 
             //DadosSensiveis();
 
-            HabilitandoBatchSize();
+            //HabilitandoBatchSize();
+
+            TempoComandoGeral();
         }
 
         static void ConsultarDepartamentos()
@@ -56,6 +58,13 @@ namespace DominandoEFCore
             }
 
             db.SaveChanges();
+        }
+
+        static void TempoComandoGeral()
+        {
+            using ApplicationContext db = new ApplicationContext();
+
+            db.Database.ExecuteSqlRaw("WAITFOR DELAY '00:00:07'; SELECT 1");
         }
     }
 }
