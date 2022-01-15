@@ -29,7 +29,15 @@ namespace DominandoEFCore
 
             //EntendendoConsulta1xNNx1();
 
-            DivisaoDeConsulta();
+            //DivisaoDeConsulta();
+
+            //CriarStoredProcedure();
+
+            //InserirDadosViaProcedure();
+
+            //CriarStoredProcedureDeConsulta();
+
+            ConsultaViaProcedure();
         }
 
         static void FiltroGlobal()
@@ -222,6 +230,65 @@ namespace DominandoEFCore
                 {
                     Console.WriteLine($"\tNome: {funcionario.Nome}");
                 }
+            }
+        }
+
+        static void CriarStoredProcedure()
+        {
+            var criarDepartamento = @"
+            CREATE OR ALTER PROCEDURE CriarDepartamento
+                @Descricao VARCHAR(50),
+                @Ativo bit
+            AS
+            BEGIN
+                INSERT INTO
+                    Departamentos(Descricao, Ativo, Excluido)
+                VALUES (@Descricao, @Ativo, 0)
+            END
+            ";
+
+            using var db = new ApplicationContext();
+
+            db.Database.ExecuteSqlRaw(criarDepartamento);
+        }
+
+        static void InserirDadosViaProcedure()
+        {
+            using var db = new ApplicationContext();
+
+            //db.Database.ExecuteSqlRaw("EXECUTE CriarDepartamento @p0, @p1", new object[] {"Departamento via Procedure", true});
+            db.Database.ExecuteSqlRaw("EXECUTE CriarDepartamento @p0, @p1", "Departamento via Procedure", true);
+        }
+
+        static void CriarStoredProcedureDeConsulta()
+        {
+            var getDepartamentos = @"
+            CREATE OR ALTER PROCEDURE GetDepartamentos
+                @Descricao VARCHAR(50)
+            AS
+            BEGIN
+                SELECT * FROM Departamentos WHERE Descricao LIKE @Descricao + '%'
+            END
+            ";
+
+            using var db = new ApplicationContext();
+
+            db.Database.ExecuteSqlRaw(getDepartamentos);
+        }
+
+        static void ConsultaViaProcedure()
+        {
+            using var db = new ApplicationContext();
+
+            var dep = new SqlParameter("@dep", "Departamento");
+
+            var departamentos = db.Departamentos.FromSqlInterpolated($"EXECUTE GetDepartamentos {dep}")
+                                                //.FromSqlRaw("EXECUTE GetDepartamentos @dep", dep)
+                                                .ToList();
+
+            foreach (var departamento in departamentos)
+            {
+                Console.WriteLine(departamento.Descricao);
             }
         }
     }
