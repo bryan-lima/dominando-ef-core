@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -12,6 +13,8 @@ namespace DominandoEFCore.Data
 {
     public class ApplicationContext : DbContext
     {
+        private readonly StreamWriter _writer = new StreamWriter("Logs_EFCore.txt", append: true);
+
         public DbSet<Departamento> Departamentos { get; set; }
         public DbSet<Funcionario> Funcionarios { get; set; }
 
@@ -21,10 +24,17 @@ namespace DominandoEFCore.Data
 
             optionsBuilder.UseSqlServer(strConnection)
                           //.LogTo(Console.WriteLine, LogLevel.Information)
-                          .LogTo(Console.WriteLine, 
-                                 new[] { CoreEventId.ContextInitialized, RelationalEventId.CommandExecuted }, 
-                                 LogLevel.Information,
-                                 DbContextLoggerOptions.LocalTime | DbContextLoggerOptions.SingleLine);
+                          //.LogTo(Console.WriteLine, 
+                          //       new[] { CoreEventId.ContextInitialized, RelationalEventId.CommandExecuted }, 
+                          //       LogLevel.Information,
+                          //       DbContextLoggerOptions.LocalTime | DbContextLoggerOptions.SingleLine)
+                          .LogTo(_writer.WriteLine, LogLevel.Information);
+        }
+
+        public override void Dispose()
+        {
+            base.Dispose();
+            _writer.Dispose();
         }
     }
 }
