@@ -15,7 +15,15 @@ namespace DominandoEFCore
     {
         static void Main(string[] args)
         {
-            
+            ConsultarDepartamentos();
+        }
+
+        static void ConsultarDepartamentos()
+        {
+            using ApplicationContext db = new ApplicationContext();
+
+            Departamento[] departamentos = db.Departamentos.Where(departamento => departamento.Id > 0)
+                                                           .ToArray();
         }
     }
 }
