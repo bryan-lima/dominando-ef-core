@@ -280,7 +280,7 @@ namespace DominandoEFCore
         {
             using var db = new ApplicationContext();
 
-            var departamentos = db.Departamentos.FromSqlRaw("EXECUTE GetDepartamentos @p0", "Departamento")
+            var departamentos = db.Departamentos.FromSqlRaw("EXECUTE GetDepartamentos {0}", "Departamento")
                                                 .ToList();
 
             foreach (var departamento in departamentos)
