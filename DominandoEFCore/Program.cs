@@ -29,7 +29,9 @@ namespace DominandoEFCore
 
             //EntendendoConsulta1xNNx1();
 
-            DivisaoDeConsulta();
+            //DivisaoDeConsulta();
+
+            CriarStoredProcedure();
         }
 
         static void FiltroGlobal()
@@ -223,6 +225,25 @@ namespace DominandoEFCore
                     Console.WriteLine($"\tNome: {funcionario.Nome}");
                 }
             }
+        }
+
+        static void CriarStoredProcedure()
+        {
+            var criarDepartamento = @"
+            CREATE OR ALTER PROCEDURE CriarDepartamento
+                @Descricao VARCHAR(50),
+                @Ativo bit
+            AS
+            BEGIN
+                INSERT INTO
+                    Departamentos(Descricao, Ativo, Excluido)
+                VALUES (@Descricao, @Ativo, 0)
+            END
+            ";
+
+            using var db = new ApplicationContext();
+
+            db.Database.ExecuteSqlRaw(criarDepartamento);
         }
     }
 }
