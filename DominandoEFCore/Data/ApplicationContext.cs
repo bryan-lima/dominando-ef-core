@@ -30,6 +30,10 @@ namespace DominandoEFCore.Data
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.UseCollation("SQL_Latin1_General_CP1_CI_AI");
+
+            modelBuilder.Entity<Departamento>()
+                        .Property(departamento => departamento.Descricao)
+                        .UseCollation("SQL_Latin1_General_CP1_CS_AS");
         }
     }
 }
