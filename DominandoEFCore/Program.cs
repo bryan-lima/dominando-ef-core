@@ -15,7 +15,14 @@ namespace DominandoEFCore
     {
         static void Main(string[] args)
         {
+            Collations();
+        }
 
+        static void Collations()
+        {
+            using ApplicationContext db = new ApplicationContext();
+            db.Database.EnsureDeleted();
+            db.Database.EnsureCreated();
         }
     }
 }

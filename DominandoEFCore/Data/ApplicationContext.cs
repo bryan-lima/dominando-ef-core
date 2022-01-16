@@ -26,5 +26,10 @@ namespace DominandoEFCore.Data
                           .LogTo(Console.WriteLine, LogLevel.Information)
                           .EnableSensitiveDataLogging();
         }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.UseCollation("SQL_Latin1_General_CP1_CI_AI");
+        }
     }
 }
