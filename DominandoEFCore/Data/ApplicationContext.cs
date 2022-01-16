@@ -22,17 +22,18 @@ namespace DominandoEFCore.Data
         {
             const string strConnection = "Data Source=DESKTOP-B76722G\\SQLEXPRESS; Initial Catalog=DominandoEFCore; User ID=developer; Password=dev*10; Integrated Security=True; Persist Security Info=False; Pooling=False; MultipleActiveResultSets=False; Encrypt=False; Trusted_Connection=False";
 
-            optionsBuilder.UseSqlServer(strConnection, options => options.MaxBatchSize(100)
-                                                                         .CommandTimeout(5)
-                                                                         .EnableRetryOnFailure(4, TimeSpan.FromSeconds(10), null))
+            optionsBuilder.UseSqlServer(strConnection)
                           .LogTo(Console.WriteLine, LogLevel.Information)
                           .EnableSensitiveDataLogging();
         }
 
-        public override void Dispose()
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            base.Dispose();
-            _writer.Dispose();
+            modelBuilder.UseCollation("SQL_Latin1_General_CP1_CI_AI");
+
+            modelBuilder.Entity<Departamento>()
+                        .Property(departamento => departamento.Descricao)
+                        .UseCollation("SQL_Latin1_General_CP1_CS_AS");
         }
     }
 }

@@ -15,77 +15,14 @@ namespace DominandoEFCore
     {
         static void Main(string[] args)
         {
-            //ConsultarDepartamentos();
-
-            //DadosSensiveis();
-
-            //HabilitandoBatchSize();
-
-            //TempoComandoGeral();
-
-            ExecutarEstrategiaResiliencia();
+            Collations();
         }
 
-        static void ConsultarDepartamentos()
+        static void Collations()
         {
             using ApplicationContext db = new ApplicationContext();
-
-            Departamento[] departamentos = db.Departamentos.Where(departamento => departamento.Id > 0)
-                                                           .ToArray();
-        }
-
-        static void DadosSensiveis()
-        {
-            using ApplicationContext db = new ApplicationContext();
-
-            string descricao = "Departamento";
-            Departamento[] departamentos = db.Departamentos.Where(departamento => departamento.Descricao.Equals(descricao))
-                                                           .ToArray();
-        }
-
-        static void HabilitandoBatchSize()
-        {
-            using ApplicationContext db = new ApplicationContext();
-
             db.Database.EnsureDeleted();
             db.Database.EnsureCreated();
-
-            for (int i = 0; i < 50; i++)
-            {
-                db.Departamentos.Add(
-                    new Departamento
-                    {
-                        Descricao = $"Departamento {i}"
-                    });
-            }
-
-            db.SaveChanges();
-        }
-
-        static void TempoComandoGeral()
-        {
-            using ApplicationContext db = new ApplicationContext();
-
-            db.Database.SetCommandTimeout(10);
-
-            db.Database.ExecuteSqlRaw("WAITFOR DELAY '00:00:07'; SELECT 1");
-        }
-
-        static void ExecutarEstrategiaResiliencia()
-        {
-            using ApplicationContext db = new ApplicationContext();
-
-            IExecutionStrategy strategy = db.Database.CreateExecutionStrategy();
-
-            strategy.Execute(() =>
-            {
-                using IDbContextTransaction transaction = db.Database.BeginTransaction();
-
-                db.Departamentos.Add(new Departamento { Descricao = "Departamento Transação" });
-                db.SaveChanges();
-
-                transaction.Commit();
-            });
         }
     }
 }
