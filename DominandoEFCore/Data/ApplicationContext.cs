@@ -24,7 +24,7 @@ namespace DominandoEFCore.Data
 
             optionsBuilder.UseSqlServer(strConnection, options => options.MaxBatchSize(100)
                                                                          .CommandTimeout(5)
-                                                                         .EnableRetryOnFailure())
+                                                                         .EnableRetryOnFailure(4, TimeSpan.FromSeconds(10), null))
                           .LogTo(Console.WriteLine, LogLevel.Information)
                           .EnableSensitiveDataLogging();
         }
