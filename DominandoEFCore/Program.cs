@@ -21,7 +21,9 @@ namespace DominandoEFCore
 
             //HabilitandoBatchSize();
 
-            TempoComandoGeral();
+            //TempoComandoGeral();
+
+            ExecutarEstrategiaResiliencia();
         }
 
         static void ConsultarDepartamentos()
@@ -67,6 +69,23 @@ namespace DominandoEFCore
             db.Database.SetCommandTimeout(10);
 
             db.Database.ExecuteSqlRaw("WAITFOR DELAY '00:00:07'; SELECT 1");
+        }
+
+        static void ExecutarEstrategiaResiliencia()
+        {
+            using ApplicationContext db = new ApplicationContext();
+
+            IExecutionStrategy strategy = db.Database.CreateExecutionStrategy();
+
+            strategy.Execute(() =>
+            {
+                using IDbContextTransaction transaction = db.Database.BeginTransaction();
+
+                db.Departamentos.Add(new Departamento { Descricao = "Departamento Transação" });
+                db.SaveChanges();
+
+                transaction.Commit();
+            });
         }
     }
 }
