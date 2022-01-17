@@ -61,6 +61,9 @@ namespace DominandoEFCore.Data
             //});
 
             modelBuilder.HasDefaultSchema("cadastros");
+
+            modelBuilder.Entity<Estado>()
+                        .ToTable("Estados", "SegundoEsquema");
         }
     }
 }
