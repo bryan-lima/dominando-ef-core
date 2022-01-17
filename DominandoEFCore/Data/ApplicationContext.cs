@@ -50,6 +50,7 @@ namespace DominandoEFCore.Data
                         .HasIndex(departamento => new { departamento.Descricao, departamento.Ativo })
                         .HasDatabaseName("idx_meu_indice_composto")
                         .HasFilter("Descricao IS NOT NULL")
+                        .HasFillFactor(80)  //80% -> Logo, 20% da folha de preenchimento de dados fica reservado para que o SQL Server possa ser mais otimizado e utilizar o espaço em benefício próprios
                         .IsUnique();
         }
     }
