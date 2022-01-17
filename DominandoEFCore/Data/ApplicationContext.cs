@@ -34,6 +34,8 @@ namespace DominandoEFCore.Data
             modelBuilder.Entity<Departamento>()
                         .Property(departamento => departamento.Descricao)
                         .UseCollation("SQL_Latin1_General_CP1_CS_AS");
+
+            modelBuilder.HasSequence("MinhaSequencia", "sequencias");
         }
     }
 }
