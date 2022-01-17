@@ -17,7 +17,9 @@ namespace DominandoEFCore
         {
             //Collations();
 
-            PropagarDados();
+            //PropagarDados();
+
+            Esquema();
         }
 
         static void Collations()
@@ -32,6 +34,14 @@ namespace DominandoEFCore
             using ApplicationContext db = new ApplicationContext();
             db.Database.EnsureDeleted();
             db.Database.EnsureCreated();
+
+            string script = db.Database.GenerateCreateScript();
+            Console.WriteLine(script);
+        }
+
+        static void Esquema()
+        {
+            using ApplicationContext db = new ApplicationContext();
 
             string script = db.Database.GenerateCreateScript();
             Console.WriteLine(script);
