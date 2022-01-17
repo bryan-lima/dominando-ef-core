@@ -41,6 +41,10 @@ namespace DominandoEFCore.Data
                         .HasMin(1)
                         .HasMax(10)
                         .IsCyclic();    //Reinicia o valor sequencial após atingir o valor limite definido
+
+            modelBuilder.Entity<Departamento>()
+                        .Property(departamento => departamento.Id)
+                        .HasDefaultValueSql("NEXT VALUE FOR sequencias.MinhaSequencia"); //Varia de acordo com o banco de dados, este exemplo é para SQL Server
         }
     }
 }
