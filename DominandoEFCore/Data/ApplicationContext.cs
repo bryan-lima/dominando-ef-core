@@ -13,11 +13,10 @@ namespace DominandoEFCore.Data
 {
     public class ApplicationContext : DbContext
     {
-        private readonly StreamWriter _writer = new StreamWriter("Logs_EFCore.txt", append: true);
-
         public DbSet<Departamento> Departamentos { get; set; }
         public DbSet<Funcionario> Funcionarios { get; set; }
         public DbSet<Estado> Estados { get; set; }
+        public DbSet<Conversor> Conversores { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
