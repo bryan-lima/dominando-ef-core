@@ -29,22 +29,29 @@ namespace DominandoEFCore.Data
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.UseCollation("SQL_Latin1_General_CP1_CI_AI");
+            //modelBuilder.UseCollation("SQL_Latin1_General_CP1_CI_AI");
+
+            //modelBuilder.Entity<Departamento>()
+            //            .Property(departamento => departamento.Descricao)
+            //            .UseCollation("SQL_Latin1_General_CP1_CS_AS");
+
+            //modelBuilder.HasSequence<int>("MinhaSequencia", "sequencias")
+            //            .StartsAt(1)
+            //            .IncrementsBy(2)
+            //            .HasMin(1)
+            //            .HasMax(10)
+            //            .IsCyclic();    //Reinicia o valor sequencial após atingir o valor limite definido
+
+            //modelBuilder.Entity<Departamento>()
+            //            .Property(departamento => departamento.Id)
+            //            .HasDefaultValueSql("NEXT VALUE FOR sequencias.MinhaSequencia"); //Varia de acordo com o banco de dados, este exemplo é para SQL Server
 
             modelBuilder.Entity<Departamento>()
-                        .Property(departamento => departamento.Descricao)
-                        .UseCollation("SQL_Latin1_General_CP1_CS_AS");
-
-            modelBuilder.HasSequence<int>("MinhaSequencia", "sequencias")
-                        .StartsAt(1)
-                        .IncrementsBy(2)
-                        .HasMin(1)
-                        .HasMax(10)
-                        .IsCyclic();    //Reinicia o valor sequencial após atingir o valor limite definido
-
-            modelBuilder.Entity<Departamento>()
-                        .Property(departamento => departamento.Id)
-                        .HasDefaultValueSql("NEXT VALUE FOR sequencias.MinhaSequencia"); //Varia de acordo com o banco de dados, este exemplo é para SQL Server
+                        .HasIndex(departamento => new { departamento.Descricao, departamento.Ativo })
+                        .HasDatabaseName("idx_meu_indice_composto")
+                        .HasFilter("Descricao IS NOT NULL")
+                        .HasFillFactor(80)  //80% -> Logo, 20% da folha de preenchimento de dados fica reservado para que o SQL Server possa ser mais otimizado e utilizar o espaço em benefício próprios
+                        .IsUnique();
         }
     }
 }
