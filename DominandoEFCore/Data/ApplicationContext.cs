@@ -17,6 +17,7 @@ namespace DominandoEFCore.Data
 
         public DbSet<Departamento> Departamentos { get; set; }
         public DbSet<Funcionario> Funcionarios { get; set; }
+        public DbSet<Estado> Estados { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -46,12 +47,18 @@ namespace DominandoEFCore.Data
             //            .Property(departamento => departamento.Id)
             //            .HasDefaultValueSql("NEXT VALUE FOR sequencias.MinhaSequencia"); //Varia de acordo com o banco de dados, este exemplo é para SQL Server
 
-            modelBuilder.Entity<Departamento>()
-                        .HasIndex(departamento => new { departamento.Descricao, departamento.Ativo })
-                        .HasDatabaseName("idx_meu_indice_composto")
-                        .HasFilter("Descricao IS NOT NULL")
-                        .HasFillFactor(80)  //80% -> Logo, 20% da folha de preenchimento de dados fica reservado para que o SQL Server possa ser mais otimizado e utilizar o espaço em benefício próprios
-                        .IsUnique();
+            //modelBuilder.Entity<Departamento>()
+            //            .HasIndex(departamento => new { departamento.Descricao, departamento.Ativo })
+            //            .HasDatabaseName("idx_meu_indice_composto")
+            //            .HasFilter("Descricao IS NOT NULL")
+            //            .HasFillFactor(80)  //80% -> Logo, 20% da folha de preenchimento de dados fica reservado para que o SQL Server possa ser mais otimizado e utilizar o espaço em benefício próprios
+            //            .IsUnique();
+
+            modelBuilder.Entity<Estado>().HasData(new[]
+            {
+                new Estado { Id = 1, Nome = "Sao Paulo" },
+                new Estado { Id = 2, Nome = "Sergipe" }
+            });
         }
     }
 }

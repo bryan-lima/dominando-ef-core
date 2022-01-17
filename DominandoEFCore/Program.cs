@@ -15,7 +15,9 @@ namespace DominandoEFCore
     {
         static void Main(string[] args)
         {
-            Collations();
+            //Collations();
+
+            PropagarDados();
         }
 
         static void Collations()
@@ -23,6 +25,16 @@ namespace DominandoEFCore
             using ApplicationContext db = new ApplicationContext();
             db.Database.EnsureDeleted();
             db.Database.EnsureCreated();
+        }
+
+        static void PropagarDados()
+        {
+            using ApplicationContext db = new ApplicationContext();
+            db.Database.EnsureDeleted();
+            db.Database.EnsureCreated();
+
+            string script = db.Database.GenerateCreateScript();
+            Console.WriteLine(script);
         }
     }
 }
