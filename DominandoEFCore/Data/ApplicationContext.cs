@@ -49,6 +49,7 @@ namespace DominandoEFCore.Data
             modelBuilder.Entity<Departamento>()
                         .HasIndex(departamento => new { departamento.Descricao, departamento.Ativo })
                         .HasDatabaseName("idx_meu_indice_composto")
+                        .HasFilter("Descricao IS NOT NULL")
                         .IsUnique();
         }
     }
