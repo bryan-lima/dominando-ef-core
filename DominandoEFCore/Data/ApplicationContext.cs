@@ -47,7 +47,8 @@ namespace DominandoEFCore.Data
             //            .HasDefaultValueSql("NEXT VALUE FOR sequencias.MinhaSequencia"); //Varia de acordo com o banco de dados, este exemplo é para SQL Server
 
             modelBuilder.Entity<Departamento>()
-                        .HasIndex(departamento => new { departamento.Descricao, departamento.Ativo });
+                        .HasIndex(departamento => new { departamento.Descricao, departamento.Ativo })
+                        .IsUnique();
         }
     }
 }
