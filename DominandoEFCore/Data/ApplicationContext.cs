@@ -34,6 +34,17 @@ namespace DominandoEFCore.Data
             modelBuilder.Entity<Departamento>()
                         .Property(departamento => departamento.Descricao)
                         .UseCollation("SQL_Latin1_General_CP1_CS_AS");
+
+            modelBuilder.HasSequence<int>("MinhaSequencia", "sequencias")
+                        .StartsAt(1)
+                        .IncrementsBy(2)
+                        .HasMin(1)
+                        .HasMax(10)
+                        .IsCyclic();    //Reinicia o valor sequencial após atingir o valor limite definido
+
+            modelBuilder.Entity<Departamento>()
+                        .Property(departamento => departamento.Id)
+                        .HasDefaultValueSql("NEXT VALUE FOR sequencias.MinhaSequencia"); //Varia de acordo com o banco de dados, este exemplo é para SQL Server
         }
     }
 }
