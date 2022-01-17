@@ -54,11 +54,13 @@ namespace DominandoEFCore.Data
             //            .HasFillFactor(80)  //80% -> Logo, 20% da folha de preenchimento de dados fica reservado para que o SQL Server possa ser mais otimizado e utilizar o espaço em benefício próprios
             //            .IsUnique();
 
-            modelBuilder.Entity<Estado>().HasData(new[]
-            {
-                new Estado { Id = 1, Nome = "Sao Paulo" },
-                new Estado { Id = 2, Nome = "Sergipe" }
-            });
+            //modelBuilder.Entity<Estado>().HasData(new[]
+            //{
+            //    new Estado { Id = 1, Nome = "Sao Paulo" },
+            //    new Estado { Id = 2, Nome = "Sergipe" }
+            //});
+
+            modelBuilder.HasDefaultSchema("cadastros");
         }
     }
 }
