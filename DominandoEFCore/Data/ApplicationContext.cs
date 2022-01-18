@@ -1,6 +1,7 @@
 ﻿using DominandoEFCore.Domain;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
+using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
@@ -64,9 +65,12 @@ namespace DominandoEFCore.Data
             //modelBuilder.Entity<Estado>()
             //            .ToTable("Estados", "SegundoEsquema");
 
+            ValueConverter<Versao, string> conversao = new ValueConverter<Versao, string>(conversorAoSerSalvoNoBD => conversorAoSerSalvoNoBD.ToString(), 
+                                                                                          obterConversorSalvoNoBD => (Versao)Enum.Parse(typeof(Versao), obterConversorSalvoNoBD));
             modelBuilder.Entity<Conversor>()
                         .Property(conversor => conversor.Versao)
-                        .HasConversion(conversorAoSerSalvoNoBD => conversorAoSerSalvoNoBD.ToString(), obterConversorSalvoNoBD => (Versao)Enum.Parse(typeof(Versao), obterConversorSalvoNoBD)); //Primeiro argumento: como o sistema deverá converter a informação que será salva no banco de dados / Segundo argumento: como o sistema deverá converter a informação que está puxando da base de dados
+                        .HasConversion(conversao);
+                        //.HasConversion(conversorAoSerSalvoNoBD => conversorAoSerSalvoNoBD.ToString(), obterConversorSalvoNoBD => (Versao)Enum.Parse(typeof(Versao), obterConversorSalvoNoBD)); //Primeiro argumento: como o sistema deverá converter a informação que será salva no banco de dados / Segundo argumento: como o sistema deverá converter a informação que está puxando da base de dados
                         //.HasConversion<string>();
         }
     }
