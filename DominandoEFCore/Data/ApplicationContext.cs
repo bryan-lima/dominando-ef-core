@@ -59,10 +59,14 @@ namespace DominandoEFCore.Data
             //    new Estado { Id = 2, Nome = "Sergipe" }
             //});
 
-            modelBuilder.HasDefaultSchema("cadastros");
+            //modelBuilder.HasDefaultSchema("cadastros");
 
-            modelBuilder.Entity<Estado>()
-                        .ToTable("Estados", "SegundoEsquema");
+            //modelBuilder.Entity<Estado>()
+            //            .ToTable("Estados", "SegundoEsquema");
+
+            modelBuilder.Entity<Conversor>()
+                        .Property(conversor => conversor.Versao)
+                        .HasConversion<string>();
         }
     }
 }
