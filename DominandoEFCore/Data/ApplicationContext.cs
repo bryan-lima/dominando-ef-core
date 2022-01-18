@@ -66,7 +66,8 @@ namespace DominandoEFCore.Data
 
             modelBuilder.Entity<Conversor>()
                         .Property(conversor => conversor.Versao)
-                        .HasConversion<string>();
+                        .HasConversion(conversorAoSerSalvoNoBD => conversorAoSerSalvoNoBD.ToString(), obterConversorSalvoNoBD => (Versao)Enum.Parse(typeof(Versao), obterConversorSalvoNoBD)); //Primeiro argumento: como o sistema deverá converter a informação que será salva no banco de dados / Segundo argumento: como o sistema deverá converter a informação que está puxando da base de dados
+                        //.HasConversion<string>();
         }
     }
 }
