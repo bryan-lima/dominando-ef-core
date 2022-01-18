@@ -1,6 +1,7 @@
 ﻿using DominandoEFCore.Domain;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
+using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
@@ -13,11 +14,10 @@ namespace DominandoEFCore.Data
 {
     public class ApplicationContext : DbContext
     {
-        private readonly StreamWriter _writer = new StreamWriter("Logs_EFCore.txt", append: true);
-
         public DbSet<Departamento> Departamentos { get; set; }
         public DbSet<Funcionario> Funcionarios { get; set; }
         public DbSet<Estado> Estados { get; set; }
+        public DbSet<Conversor> Conversores { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -60,10 +60,25 @@ namespace DominandoEFCore.Data
             //    new Estado { Id = 2, Nome = "Sergipe" }
             //});
 
-            modelBuilder.HasDefaultSchema("cadastros");
+            //modelBuilder.HasDefaultSchema("cadastros");
 
-            modelBuilder.Entity<Estado>()
-                        .ToTable("Estados", "SegundoEsquema");
+            //modelBuilder.Entity<Estado>()
+            //            .ToTable("Estados", "SegundoEsquema");
+
+            ValueConverter<Versao, string> conversao = new ValueConverter<Versao, string>(conversorAoSerSalvoNoBD => conversorAoSerSalvoNoBD.ToString(), 
+                                                                                          obterConversorSalvoNoBD => (Versao)Enum.Parse(typeof(Versao), obterConversorSalvoNoBD));
+
+            EnumToStringConverter<Versao> conversao1 = new EnumToStringConverter<Versao>();
+            
+            //Para verificar outros conversores
+            //Microsoft.EntityFrameworkCore.Storage.ValueConversion.
+
+            modelBuilder.Entity<Conversor>()
+                        .Property(conversor => conversor.Versao)
+                        .HasConversion(conversao1);
+                        //.HasConversion(conversao);
+                        //.HasConversion(conversorAoSerSalvoNoBD => conversorAoSerSalvoNoBD.ToString(), obterConversorSalvoNoBD => (Versao)Enum.Parse(typeof(Versao), obterConversorSalvoNoBD)); //Primeiro argumento: como o sistema deverá converter a informação que será salva no banco de dados / Segundo argumento: como o sistema deverá converter a informação que está puxando da base de dados
+                        //.HasConversion<string>();
         }
     }
 }
