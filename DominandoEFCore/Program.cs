@@ -19,7 +19,9 @@ namespace DominandoEFCore
 
             //PropagarDados();
 
-            Esquema();
+            //Esquema();
+
+            ConversorDeValor();
         }
 
         static void Collations()
@@ -46,5 +48,7 @@ namespace DominandoEFCore
             string script = db.Database.GenerateCreateScript();
             Console.WriteLine(script);
         }
+
+        static void ConversorDeValor() => Esquema();
     }
 }
