@@ -67,9 +67,16 @@ namespace DominandoEFCore.Data
 
             ValueConverter<Versao, string> conversao = new ValueConverter<Versao, string>(conversorAoSerSalvoNoBD => conversorAoSerSalvoNoBD.ToString(), 
                                                                                           obterConversorSalvoNoBD => (Versao)Enum.Parse(typeof(Versao), obterConversorSalvoNoBD));
+
+            EnumToStringConverter<Versao> conversao1 = new EnumToStringConverter<Versao>();
+            
+            //Para verificar outros conversores
+            //Microsoft.EntityFrameworkCore.Storage.ValueConversion.
+
             modelBuilder.Entity<Conversor>()
                         .Property(conversor => conversor.Versao)
-                        .HasConversion(conversao);
+                        .HasConversion(conversao1);
+                        //.HasConversion(conversao);
                         //.HasConversion(conversorAoSerSalvoNoBD => conversorAoSerSalvoNoBD.ToString(), obterConversorSalvoNoBD => (Versao)Enum.Parse(typeof(Versao), obterConversorSalvoNoBD)); //Primeiro argumento: como o sistema deverá converter a informação que será salva no banco de dados / Segundo argumento: como o sistema deverá converter a informação que está puxando da base de dados
                         //.HasConversion<string>();
         }
