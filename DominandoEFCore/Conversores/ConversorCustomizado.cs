@@ -11,7 +11,8 @@ namespace DominandoEFCore.Conversores
     public class ConversorCustomizado : ValueConverter<Status, string>
     {
         public ConversorCustomizado() : base(statusParaSalvarNoBD => ConverterParaBancoDeDados(statusParaSalvarNoBD),
-                                             statusConsultadoDoBD => ConverterParaAplicacao(statusConsultadoDoBD))
+                                             statusConsultadoDoBD => ConverterParaAplicacao(statusConsultadoDoBD),
+                                             new ConverterMappingHints(1))
         {
 
         }
