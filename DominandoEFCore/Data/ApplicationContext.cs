@@ -1,4 +1,5 @@
-﻿using DominandoEFCore.Domain;
+﻿using DominandoEFCore.Conversores;
+using DominandoEFCore.Domain;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
@@ -79,6 +80,10 @@ namespace DominandoEFCore.Data
                         //.HasConversion(conversao);
                         //.HasConversion(conversorAoSerSalvoNoBD => conversorAoSerSalvoNoBD.ToString(), obterConversorSalvoNoBD => (Versao)Enum.Parse(typeof(Versao), obterConversorSalvoNoBD)); //Primeiro argumento: como o sistema deverá converter a informação que será salva no banco de dados / Segundo argumento: como o sistema deverá converter a informação que está puxando da base de dados
                         //.HasConversion<string>();
+
+            modelBuilder.Entity<Conversor>()
+                        .Property(conversor => conversor.Status)
+                        .HasConversion(new ConversorCustomizado());
         }
     }
 }
