@@ -21,7 +21,9 @@ namespace DominandoEFCore
 
             //Esquema();
 
-            ConversorDeValor();
+            //ConversorDeValor();
+
+            ConversorCustomizado();
         }
 
         static void Collations()
@@ -50,5 +52,26 @@ namespace DominandoEFCore
         }
 
         static void ConversorDeValor() => Esquema();
+
+        static void ConversorCustomizado()
+        {
+            using ApplicationContext db = new ApplicationContext();
+            db.Database.EnsureDeleted();
+            db.Database.EnsureCreated();
+
+            db.Conversores.Add(
+                new Conversor
+                {
+                    Status = Status.Devolvido,
+                });
+
+            db.SaveChanges();
+
+            Conversor conversorEmAnalise = db.Conversores.AsNoTracking()
+                                                         .FirstOrDefault(conversor => conversor.Status == Status.Analise);
+            
+            Conversor conversorDevolvido = db.Conversores.AsNoTracking()
+                                                         .FirstOrDefault(conversor => conversor.Status == Status.Devolvido);
+        }
     }
 }
