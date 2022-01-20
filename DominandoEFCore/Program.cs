@@ -23,7 +23,9 @@ namespace DominandoEFCore
 
             //ConversorDeValor();
 
-            ConversorCustomizado();
+            //ConversorCustomizado();
+
+            PropriedadesDeSombra();
         }
 
         static void Collations()
@@ -72,6 +74,14 @@ namespace DominandoEFCore
             
             Conversor conversorDevolvido = db.Conversores.AsNoTracking()
                                                          .FirstOrDefault(conversor => conversor.Status == Status.Devolvido);
+        }
+
+        static void PropriedadesDeSombra()
+        {
+            using ApplicationContext db = new ApplicationContext();
+
+            db.Database.EnsureDeleted();
+            db.Database.EnsureCreated();
         }
     }
 }
