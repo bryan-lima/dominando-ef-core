@@ -84,6 +84,9 @@ namespace DominandoEFCore.Data
             modelBuilder.Entity<Conversor>()
                         .Property(conversor => conversor.Status)
                         .HasConversion(new ConversorCustomizado());
+
+            modelBuilder.Entity<Departamento>()
+                        .Property<DateTime>("UltimaAtualizacao");
         }
     }
 }
