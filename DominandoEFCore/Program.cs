@@ -8,6 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Text.Json;
 
 namespace DominandoEFCore
 {
@@ -27,7 +28,9 @@ namespace DominandoEFCore
 
             //PropriedadesDeSombra();
 
-            TrabalhandoComPropriedadesDeSombra();
+            //TrabalhandoComPropriedadesDeSombra();
+
+            TiposDePropriedades();
         }
 
         static void Collations()
@@ -106,6 +109,35 @@ namespace DominandoEFCore
 
             Departamento[] departamentos = db.Departamentos.Where(departamento => EF.Property<DateTime>(departamento, "UltimaAtualizacao") < DateTime.Now)
                                                            .ToArray();
+        }
+
+        static void TiposDePropriedades()
+        {
+            using ApplicationContext db = new ApplicationContext();
+
+            db.Database.EnsureDeleted();
+            db.Database.EnsureCreated();
+
+            Cliente cliente = new Cliente
+            {
+                Nome = "Bryan Lima",
+                Telefone = "(79) 98888-9999",
+                Endereco = new Endereco { Bairro = "Centro", Cidade = "Sao Paulo" }
+            };
+
+            db.Clientes.Add(cliente);
+            db.SaveChanges();
+
+            List<Cliente> clientes = db.Clientes.AsNoTracking()
+                                                .ToList();
+
+            var options = new JsonSerializerOptions { WriteIndented = true };
+
+            clientes.ForEach(cli => 
+            {
+                string json = JsonSerializer.Serialize(cli, options);
+                Console.WriteLine(json);
+            });
         }
     }
 }
