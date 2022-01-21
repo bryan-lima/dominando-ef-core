@@ -91,7 +91,11 @@ namespace DominandoEFCore.Data
 
             modelBuilder.Entity<Cliente>(cliente => 
             {
-                cliente.OwnsOne(cli => cli.Endereco);
+                cliente.OwnsOne(cli => cli.Endereco, endereco => 
+                {
+                    endereco.Property(end => end.Bairro )
+                            .HasColumnName("Bairro");
+                });
             });
         }
     }
