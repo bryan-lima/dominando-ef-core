@@ -25,7 +25,9 @@ namespace DominandoEFCore
 
             //ConversorCustomizado();
 
-            PropriedadesDeSombra();
+            //PropriedadesDeSombra();
+
+            TrabalhandoComPropriedadesDeSombra();
         }
 
         static void Collations()
@@ -75,13 +77,35 @@ namespace DominandoEFCore
             Conversor conversorDevolvido = db.Conversores.AsNoTracking()
                                                          .FirstOrDefault(conversor => conversor.Status == Status.Devolvido);
         }
-
         static void PropriedadesDeSombra()
         {
             using ApplicationContext db = new ApplicationContext();
 
             db.Database.EnsureDeleted();
             db.Database.EnsureCreated();
+        }
+
+        static void TrabalhandoComPropriedadesDeSombra()
+        {
+            using ApplicationContext db = new ApplicationContext();
+
+            //db.Database.EnsureDeleted();
+            //db.Database.EnsureCreated();
+
+            //Departamento departamento = new Departamento
+            //{
+            //    Descricao = "Departamento Propriedade de Sombra"
+            //};
+
+            //db.Departamentos.Add(departamento);
+
+            //db.Entry(departamento)
+            //  .Property("UltimaAtualizacao").CurrentValue = DateTime.Now;
+
+            //db.SaveChanges();
+
+            Departamento[] departamentos = db.Departamentos.Where(departamento => EF.Property<DateTime>(departamento, "UltimaAtualizacao") < DateTime.Now)
+                                                           .ToArray();
         }
     }
 }
