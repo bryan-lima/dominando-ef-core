@@ -95,6 +95,8 @@ namespace DominandoEFCore.Data
                 {
                     endereco.Property(end => end.Bairro )
                             .HasColumnName("Bairro");
+
+                    endereco.ToTable("Enderecos");
                 });
             });
         }
