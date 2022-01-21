@@ -89,20 +89,23 @@ namespace DominandoEFCore
         {
             using ApplicationContext db = new ApplicationContext();
 
-            db.Database.EnsureDeleted();
-            db.Database.EnsureCreated();
+            //db.Database.EnsureDeleted();
+            //db.Database.EnsureCreated();
 
-            Departamento departamento = new Departamento
-            {
-                Descricao = "Departamento Propriedade de Sombra"
-            };
+            //Departamento departamento = new Departamento
+            //{
+            //    Descricao = "Departamento Propriedade de Sombra"
+            //};
 
-            db.Departamentos.Add(departamento);
+            //db.Departamentos.Add(departamento);
 
-            db.Entry(departamento)
-              .Property("UltimaAtualizacao").CurrentValue = DateTime.Now;
+            //db.Entry(departamento)
+            //  .Property("UltimaAtualizacao").CurrentValue = DateTime.Now;
 
-            db.SaveChanges();
+            //db.SaveChanges();
+
+            Departamento[] departamentos = db.Departamentos.Where(departamento => EF.Property<DateTime>(departamento, "UltimaAtualizacao") < DateTime.Now)
+                                                           .ToArray();
         }
     }
 }
