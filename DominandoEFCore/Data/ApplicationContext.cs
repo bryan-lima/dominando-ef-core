@@ -1,4 +1,5 @@
-﻿using DominandoEFCore.Conversores;
+﻿using DominandoEFCore.Configurations;
+using DominandoEFCore.Conversores;
 using DominandoEFCore.Domain;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
@@ -89,16 +90,7 @@ namespace DominandoEFCore.Data
             //modelBuilder.Entity<Departamento>()
             //            .Property<DateTime>("UltimaAtualizacao");
 
-            modelBuilder.Entity<Cliente>(cliente => 
-            {
-                cliente.OwnsOne(cli => cli.Endereco, endereco => 
-                {
-                    endereco.Property(end => end.Bairro )
-                            .HasColumnName("Bairro");
-
-                    endereco.ToTable("Enderecos");
-                });
-            });
+            modelBuilder.ApplyConfiguration(new ClienteConfiguration());
         }
     }
 }
