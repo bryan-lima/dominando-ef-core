@@ -159,8 +159,7 @@ namespace DominandoEFCore
 
             db.SaveChanges();
 
-            List<Estado> estados = db.Estados.Include(estado => estado.Governador)
-                                             .AsNoTracking()
+            List<Estado> estados = db.Estados.AsNoTracking()
                                              .ToList();
 
             estados.ForEach(est =>

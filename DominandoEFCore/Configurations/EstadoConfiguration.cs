@@ -16,6 +16,9 @@ namespace DominandoEFCore.Configurations
             builder.HasOne(estado => estado.Governador)
                    .WithOne(governador => governador.Estado)
                    .HasForeignKey<Governador>(governador => governador.EstadoId);   // Neste caso não é obrígatório informar a chave estrangeira pois já foi definido explicitamente na classe Governador
+
+            builder.Navigation(estado => estado.Governador)
+                   .AutoInclude();
         }
     }
 }
