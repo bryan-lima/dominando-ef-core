@@ -30,7 +30,9 @@ namespace DominandoEFCore
 
             //TrabalhandoComPropriedadesDeSombra();
 
-            TiposDePropriedades();
+            //TiposDePropriedades();
+
+            RelacionamentoUmParaUm();
         }
 
         static void Collations()
@@ -137,6 +139,32 @@ namespace DominandoEFCore
             {
                 string json = JsonSerializer.Serialize(cli, options);
                 Console.WriteLine(json);
+            });
+        }
+
+        static void RelacionamentoUmParaUm()
+        {
+            using ApplicationContext db = new ApplicationContext();
+
+            db.Database.EnsureDeleted();
+            db.Database.EnsureCreated();
+
+            Estado estado = new Estado
+            {
+                Nome = "Sao Paulo",
+                Governador = new Governador { Nome = "Bryan Lima" }
+            };
+
+            db.Estados.Add(estado);
+
+            db.SaveChanges();
+
+            List<Estado> estados = db.Estados.AsNoTracking()
+                                             .ToList();
+
+            estados.ForEach(est =>
+            {
+                Console.WriteLine($"Estado: {est.Nome}, Governador: {est.Governador.Nome}");
             });
         }
     }
