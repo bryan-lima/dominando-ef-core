@@ -19,6 +19,9 @@ namespace DominandoEFCore.Configurations
 
             builder.Navigation(estado => estado.Governador)
                    .AutoInclude();
+
+            builder.HasMany(estado => estado.Cidades)
+                   .WithOne();
         }
     }
 }
