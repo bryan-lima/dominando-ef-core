@@ -22,7 +22,8 @@ namespace DominandoEFCore.Configurations
 
             builder.HasMany(estado => estado.Cidades)
                    .WithOne(cidade => cidade.Estado)
-                   .OnDelete(DeleteBehavior.Restrict);
+                   .IsRequired(false);
+                   //.OnDelete(DeleteBehavior.Restrict);
         }
     }
 }
