@@ -21,7 +21,8 @@ namespace DominandoEFCore.Configurations
                    .AutoInclude();
 
             builder.HasMany(estado => estado.Cidades)
-                   .WithOne(cidade => cidade.Estado);
+                   .WithOne(cidade => cidade.Estado)
+                   .OnDelete(DeleteBehavior.Restrict);
         }
     }
 }
