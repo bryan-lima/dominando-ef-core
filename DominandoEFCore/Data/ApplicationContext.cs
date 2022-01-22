@@ -9,6 +9,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -90,7 +91,9 @@ namespace DominandoEFCore.Data
             //modelBuilder.Entity<Departamento>()
             //            .Property<DateTime>("UltimaAtualizacao");
 
-            modelBuilder.ApplyConfiguration(new ClienteConfiguration());
+            //modelBuilder.ApplyConfiguration(new ClienteConfiguration());
+
+            modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
         }
     }
 }
