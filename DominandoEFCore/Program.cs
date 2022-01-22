@@ -32,7 +32,9 @@ namespace DominandoEFCore
 
             //TiposDePropriedades();
 
-            RelacionamentoUmParaUm();
+            //RelacionamentoUmParaUm();
+
+            RelacionamentoUmParaMuitos();
         }
 
         static void Collations()
@@ -166,6 +168,47 @@ namespace DominandoEFCore
             {
                 Console.WriteLine($"Estado: {est.Nome}, Governador: {est.Governador.Nome}");
             });
+        }
+
+        static void RelacionamentoUmParaMuitos()
+        {
+            using (ApplicationContext db = new ApplicationContext())
+            {
+                db.Database.EnsureDeleted();
+                db.Database.EnsureCreated();
+
+                Estado estado = new Estado
+                {
+                    Nome = "Sao Paulo",
+                    Governador = new Governador { Nome = "Bryan Lima" }
+                };
+
+                estado.Cidades.Add(new Cidade { Nome = "Sorocaba" });
+
+                db.Estados.Add(estado);
+
+                db.SaveChanges();
+            }
+
+            using (ApplicationContext db = new ApplicationContext())
+            {
+                List<Estado> estados = db.Estados.ToList();
+
+                estados[0].Cidades.Add(new Cidade { Nome = "Atibaia" });
+
+                db.SaveChanges();
+
+                foreach (Estado estado in db.Estados.Include(estado => estado.Cidades)
+                                                 .AsNoTracking())
+                {
+                    Console.WriteLine($"Estado: {estado.Nome}, Governador: {estado.Governador.Nome}");
+
+                    foreach (Cidade cidade in estado.Cidades)
+                    {
+                        Console.WriteLine($"\t Cidade: {cidade.Nome}");
+                    }
+                }
+            }
         }
     }
 }
