@@ -93,7 +93,9 @@ namespace DominandoEFCore.Data
 
             //modelBuilder.ApplyConfiguration(new ClienteConfiguration());
 
-            modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
+            //modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
+
+            modelBuilder.ApplyConfigurationsFromAssembly(typeof(ApplicationContext).Assembly);
         }
     }
 }
