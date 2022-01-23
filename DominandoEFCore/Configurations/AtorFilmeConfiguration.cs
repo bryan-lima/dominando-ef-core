@@ -14,7 +14,8 @@ namespace DominandoEFCore.Configurations
         public void Configure(EntityTypeBuilder<Ator> builder)
         {
             builder.HasMany(ator => ator.Filmes)
-                   .WithMany(filme => filme.Atores);
+                   .WithMany(filme => filme.Atores)
+                   .UsingEntity(entityTypeBuilder => entityTypeBuilder.ToTable("AtoresFilmes"));
         }
     }
 }
