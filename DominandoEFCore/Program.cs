@@ -34,7 +34,9 @@ namespace DominandoEFCore
 
             //RelacionamentoUmParaUm();
 
-            RelacionamentoUmParaMuitos();
+            //RelacionamentoUmParaMuitos();
+
+            RelacionamentoMuitosParaMuitos();
         }
 
         static void Collations()
@@ -206,6 +208,46 @@ namespace DominandoEFCore
                     foreach (Cidade cidade in estado.Cidades)
                     {
                         Console.WriteLine($"\t Cidade: {cidade.Nome}");
+                    }
+                }
+            }
+        }
+
+        static void RelacionamentoMuitosParaMuitos()
+        {
+            using (ApplicationContext db = new ApplicationContext())
+            {
+                db.Database.EnsureDeleted();
+                db.Database.EnsureCreated();
+
+                Ator ator1 = new Ator { Nome = "Bryan" };
+                Ator ator2 = new Ator { Nome = "Pires" };
+                Ator ator3 = new Ator { Nome = "Bruno" };
+
+                Filme filme1 = new Filme { Descricao = "A volta dos que não foram" };
+                Filme filme2 = new Filme { Descricao = "De volta para o futuro" };
+                Filme filme3 = new Filme { Descricao = "Poeira em alto mar filme" };
+
+                ator1.Filmes.Add(filme1);
+                ator1.Filmes.Add(filme2);
+
+                ator2.Filmes.Add(filme1);
+
+                filme3.Atores.Add(ator1);
+                filme3.Atores.Add(ator2);
+                filme3.Atores.Add(ator3);
+
+                db.AddRange(ator1, ator2, filme3);
+
+                db.SaveChanges();
+
+                foreach (Ator ator in db.Atores.Include(ator => ator.Filmes))
+                {
+                    Console.WriteLine($"Ator: {ator.Nome}");
+
+                    foreach (Filme filme in ator.Filmes)
+                    {
+                        Console.WriteLine($"\tFilme: {filme.Descricao}");
                     }
                 }
             }
