@@ -25,7 +25,12 @@ namespace DominandoEFCore.Configurations
                                                                                                   .HasForeignKey("FilmeId"),
                                                             entityTypeBuilder => entityTypeBuilder.HasOne<Ator>()
                                                                                                   .WithMany()
-                                                                                                  .HasForeignKey("AtorId"));
+                                                                                                  .HasForeignKey("AtorId"),
+                                                            entityTypeBuilder => 
+                                                            {
+                                                                entityTypeBuilder.Property<DateTime>("CadastradoEm")
+                                                                                 .HasDefaultValueSql("GETDATE()");
+                                                            });
         }
     }
 }
