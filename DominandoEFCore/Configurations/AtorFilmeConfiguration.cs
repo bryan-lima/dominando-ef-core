@@ -13,9 +13,24 @@ namespace DominandoEFCore.Configurations
     {
         public void Configure(EntityTypeBuilder<Ator> builder)
         {
+            //builder.HasMany(ator => ator.Filmes)
+            //       .WithMany(filme => filme.Atores)
+            //       .UsingEntity(entityTypeBuilder => entityTypeBuilder.ToTable("AtoresFilmes"));
+
             builder.HasMany(ator => ator.Filmes)
                    .WithMany(filme => filme.Atores)
-                   .UsingEntity(entityTypeBuilder => entityTypeBuilder.ToTable("AtoresFilmes"));
+                   .UsingEntity<Dictionary<string, object>>("FilmesAtores", 
+                                                            entityTypeBuilder => entityTypeBuilder.HasOne<Filme>()
+                                                                                                  .WithMany()
+                                                                                                  .HasForeignKey("FilmeId"),
+                                                            entityTypeBuilder => entityTypeBuilder.HasOne<Ator>()
+                                                                                                  .WithMany()
+                                                                                                  .HasForeignKey("AtorId"),
+                                                            entityTypeBuilder => 
+                                                            {
+                                                                entityTypeBuilder.Property<DateTime>("CadastradoEm")
+                                                                                 .HasDefaultValueSql("GETDATE()");
+                                                            });
         }
     }
 }
