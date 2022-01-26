@@ -270,7 +270,7 @@ namespace DominandoEFCore
 
                 foreach (Documento documento in db.Documentos.AsNoTracking())
                 {
-                    Console.WriteLine($"CPF -> {documento.CPF}");
+                    Console.WriteLine($"CPF -> {documento.GetCPF()}");
                 }
             }
         }

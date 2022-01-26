@@ -13,8 +13,8 @@ namespace DominandoEFCore.Configurations
     {
         public void Configure(EntityTypeBuilder<Documento> builder)
         {
-            builder.Property(documento => documento.CPF)
-                   .HasField("_cpf");
+            builder.Property("_cpf");
+                   //.HasField("_cpf");
         }
     }
 }
