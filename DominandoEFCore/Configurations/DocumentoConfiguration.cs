@@ -13,7 +13,9 @@ namespace DominandoEFCore.Configurations
     {
         public void Configure(EntityTypeBuilder<Documento> builder)
         {
-            builder.Property("_cpf");
+            builder.Property("_cpf")
+                   .HasColumnName("CPF")
+                   .HasMaxLength(11);
                    //.HasField("_cpf");
         }
     }
