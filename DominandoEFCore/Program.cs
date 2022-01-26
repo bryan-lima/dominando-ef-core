@@ -36,7 +36,9 @@ namespace DominandoEFCore
 
             //RelacionamentoUmParaMuitos();
 
-            RelacionamentoMuitosParaMuitos();
+            //RelacionamentoMuitosParaMuitos();
+
+            CampoDeApoio();
         }
 
         static void Collations()
@@ -249,6 +251,26 @@ namespace DominandoEFCore
                     {
                         Console.WriteLine($"\tFilme: {filme.Descricao}");
                     }
+                }
+            }
+        }
+
+        public static void CampoDeApoio()
+        {
+            using (ApplicationContext db = new ApplicationContext())
+            {
+                db.Database.EnsureDeleted();
+                db.Database.EnsureCreated();
+
+                Documento _documento = new Documento();
+                _documento.SetCPF("12345678933");
+
+                db.Documentos.Add(_documento);
+                db.SaveChanges();
+
+                foreach (Documento documento in db.Documentos.AsNoTracking())
+                {
+                    Console.WriteLine($"CPF -> {documento.GetCPF()}");
                 }
             }
         }
