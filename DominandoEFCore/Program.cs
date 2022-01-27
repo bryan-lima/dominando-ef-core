@@ -299,8 +299,11 @@ namespace DominandoEFCore
                 Instrutor[] instrutores = db.Instrutores.AsNoTracking()
                                                         .ToArray();
 
-                Aluno[] alunos = db.Alunos.AsNoTracking()
-                                          .ToArray();
+                //Aluno[] alunos = db.Alunos.AsNoTracking()
+                //                          .ToArray();
+                Aluno[] alunos = db.Pessoas.OfType<Aluno>().AsNoTracking()
+                                                           .ToArray();
+
 
                 Console.WriteLine("Pessoas **************");
                 foreach (Pessoa pessoa in pessoas)
