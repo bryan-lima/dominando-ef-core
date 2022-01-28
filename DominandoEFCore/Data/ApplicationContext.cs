@@ -28,6 +28,7 @@ namespace DominandoEFCore.Data
         public DbSet<Pessoa> Pessoas { get; set; }
         public DbSet<Instrutor> Instrutores { get; set; }
         public DbSet<Aluno> Alunos { get; set; }
+        public DbSet<Dictionary<string, object>> Configuracoes => Set<Dictionary<string, object>>("Configuracoes");
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -102,6 +103,19 @@ namespace DominandoEFCore.Data
             //modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
 
             modelBuilder.ApplyConfigurationsFromAssembly(typeof(ApplicationContext).Assembly);
+
+            modelBuilder.SharedTypeEntity<Dictionary<string, object>>("Configuracoes", entityTypeBuilder =>
+            {
+                entityTypeBuilder.Property<int>("Id");
+
+                entityTypeBuilder.Property<string>("Chave")
+                                 .HasColumnType("VARCHAR(40)")
+                                 .IsRequired();
+
+                entityTypeBuilder.Property<string>("Valor")
+                                 .HasColumnType("VARCHAR(255)")
+                                 .IsRequired();
+            });
         }
     }
 }
