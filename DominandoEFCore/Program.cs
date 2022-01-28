@@ -40,7 +40,9 @@ namespace DominandoEFCore
 
             //CampoDeApoio();
 
-            ExemploTPH();
+            //ExemploTPH();
+
+            PacotesDePropriedades();
         }
 
         static void Collations()
@@ -321,6 +323,34 @@ namespace DominandoEFCore
                 foreach (Aluno aluno in alunos)
                 {
                     Console.WriteLine($"Id: {aluno.Id} -> {aluno.Nome}, Idade: {aluno.Idade}, Data do Contrato: {aluno.DataContrato}");
+                }
+            }
+        }
+
+        public static void PacotesDePropriedades()
+        {
+            using (ApplicationContext db = new ApplicationContext())
+            {
+                db.Database.EnsureDeleted();
+                db.Database.EnsureCreated();
+
+                Dictionary<string, object> _configuracao = new Dictionary<string, object>
+                {
+                    ["Chave"] = "SenhaBancoDeDados",
+                    ["Valor"] = Guid.NewGuid()
+                                    .ToString()
+                };
+
+                db.Configuracoes.Add(_configuracao);
+                db.SaveChanges();
+
+                Dictionary<string, object>[] _configuracoes = db.Configuracoes.AsNoTracking()
+                                                                              .Where(p => p["Chave"] == "SenhaBancoDeDados")
+                                                                              .ToArray();
+
+                foreach (Dictionary<string, object> configuracao in _configuracoes)
+                {
+                    Console.WriteLine($"Chave: {configuracao["Chave"]} - Valor: {configuracao["Valor"]}");
                 }
             }
         }
