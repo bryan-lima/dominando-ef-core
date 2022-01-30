@@ -42,7 +42,9 @@ namespace DominandoEFCore
 
             //ExemploTPH();
 
-            PacotesDePropriedades();
+            //PacotesDePropriedades();
+
+            Atributos();
         }
 
         static void Collations()
@@ -88,7 +90,7 @@ namespace DominandoEFCore
 
             Conversor conversorEmAnalise = db.Conversores.AsNoTracking()
                                                          .FirstOrDefault(conversor => conversor.Status == Status.Analise);
-            
+
             Conversor conversorDevolvido = db.Conversores.AsNoTracking()
                                                          .FirstOrDefault(conversor => conversor.Status == Status.Devolvido);
         }
@@ -145,7 +147,7 @@ namespace DominandoEFCore
 
             var options = new JsonSerializerOptions { WriteIndented = true };
 
-            clientes.ForEach(cli => 
+            clientes.ForEach(cli =>
             {
                 string json = JsonSerializer.Serialize(cli, options);
                 Console.WriteLine(json);
@@ -352,6 +354,27 @@ namespace DominandoEFCore
                 {
                     Console.WriteLine($"Chave: {configuracao["Chave"]} - Valor: {configuracao["Valor"]}");
                 }
+            }
+        }
+
+        public static void Atributos()
+        {
+            using (ApplicationContext db = new ApplicationContext())
+            {
+                db.Database.EnsureDeleted();
+                db.Database.EnsureCreated();
+
+                string _script = db.Database.GenerateCreateScript();
+
+                Console.WriteLine(_script);
+
+                db.Atributos.Add(new Atributo
+                {
+                    Descricao = "Exemplo",
+                    Observacao = "Observacao"
+                });
+
+                db.SaveChanges();
             }
         }
     }
