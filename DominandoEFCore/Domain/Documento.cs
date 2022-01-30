@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -20,7 +21,10 @@ namespace DominandoEFCore.Domain
 
             _cpf = cpf;
         }
-
+        
+        //[BackingField("_cpf")]
+        [BackingField(nameof(_cpf))]
+        public string CPF => _cpf;
         public string GetCPF() => _cpf;
     }
 }
