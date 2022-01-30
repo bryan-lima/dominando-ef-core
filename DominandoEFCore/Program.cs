@@ -361,9 +361,20 @@ namespace DominandoEFCore
         {
             using (ApplicationContext db = new ApplicationContext())
             {
+                db.Database.EnsureDeleted();
+                db.Database.EnsureCreated();
+
                 string _script = db.Database.GenerateCreateScript();
 
                 Console.WriteLine(_script);
+
+                db.Atributos.Add(new Atributo
+                {
+                    Descricao = "Exemplo",
+                    Observacao = "Observacao"
+                });
+
+                db.SaveChanges();
             }
         }
     }
