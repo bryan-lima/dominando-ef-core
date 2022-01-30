@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -9,10 +10,11 @@ using System.Threading.Tasks;
 namespace DominandoEFCore.Domain
 {
     [Table("TabelaAtributos")]
+    [Index(nameof(Descricao), nameof(Id), IsUnique = true)]
     public class Atributo
     {
         [Key]
-        [DatabaseGenerated(DatabaseGeneratedOption.None)]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
 
         [Column("MinhaDescricao", TypeName = "VARCHAR(100)")]
