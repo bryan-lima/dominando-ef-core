@@ -17,8 +17,10 @@ namespace DominandoEFCore
         static void Main(string[] args)
         {
             //FuncoesDeDatas();
-            
-            FuncaoLike();
+
+            //FuncaoLike();
+
+            FuncaoDataLength();
         }
 
         public static void FuncoesDeDatas()
@@ -99,6 +101,25 @@ namespace DominandoEFCore
                 {
                     Console.WriteLine(descricao);
                 }
+            }
+        }
+
+        public static void FuncaoDataLength()
+        {
+            using (ApplicationContext db = new ApplicationContext())
+            {
+                var _resultado = db.Funcoes.AsNoTracking()
+                                           .Select(funcao => new 
+                { 
+                    TotalBytesCampoData = EF.Functions.DataLength(funcao.Data1),
+                    TotalBytes1 = EF.Functions.DataLength(funcao.Descricao1),
+                    TotalBytes2 = EF.Functions.DataLength(funcao.Descricao2),
+                    Total1 = funcao.Descricao1.Length,
+                    Total2 = funcao.Descricao2.Length,
+                }).FirstOrDefault();
+
+                Console.WriteLine("Resultado:");
+                Console.WriteLine(_resultado);
             }
         }
     }
