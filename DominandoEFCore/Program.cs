@@ -131,7 +131,7 @@ namespace DominandoEFCore
 
             using (ApplicationContext db = new ApplicationContext())
             {
-                Funcao _resultado = db.Funcoes.AsNoTracking()
+                Funcao _resultado = db.Funcoes//.AsNoTracking()
                                               .FirstOrDefault(funcao => EF.Property<string>(funcao, "PropriedadeSombra") == "Teste");
 
                 string _propriedadeSombra = db.Entry(_resultado)
