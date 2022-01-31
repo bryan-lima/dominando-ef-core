@@ -148,7 +148,7 @@ namespace DominandoEFCore
         {
             using (ApplicationContext db = new ApplicationContext())
             {
-                Funcao _consulta1 = db.Funcoes.FirstOrDefault(funcao => EF.Functions.Collate(funcao.Descricao1, "SQL_Latin1_General_CP1_CS_AS") == "tela"); //CS = Case Sensitive
+                Funcao _consulta1 = db.Funcoes.FirstOrDefault(funcao => EF.Functions.Collate(funcao.Descricao1, "SQL_Latin1_General_CP1_CS_AS") == "Tela"); //CS = Case Sensitive
 
                 Funcao _consulta2 = db.Funcoes.FirstOrDefault(funcao => EF.Functions.Collate(funcao.Descricao1, "SQL_Latin1_General_CP1_CI_AS") == "tela"); //CI = Case Insensitive
 
