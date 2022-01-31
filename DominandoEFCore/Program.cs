@@ -16,7 +16,9 @@ namespace DominandoEFCore
     {
         static void Main(string[] args)
         {
-            FuncoesDeDatas();
+            //FuncoesDeDatas();
+            
+            FuncaoLike();
         }
 
         public static void FuncoesDeDatas()
@@ -76,6 +78,28 @@ namespace DominandoEFCore
             });
 
             db.SaveChanges();
+        }
+
+        public static void FuncaoLike()
+        {
+            using (ApplicationContext db = new ApplicationContext())
+            {
+                string _script = db.Database.GenerateCreateScript();
+
+                Console.WriteLine(_script);
+
+                string[] _dados = db.Funcoes.AsNoTracking()
+                                            //.Where(funcao => EF.Functions.Like(funcao.Descricao1, "Bo%"))
+                                            .Where(funcao => EF.Functions.Like(funcao.Descricao1, "B[ao]%"))
+                                            .Select(funcao => funcao.Descricao1)
+                                            .ToArray();
+
+                Console.WriteLine("Resultado:");
+                foreach (string descricao in _dados)
+                {
+                    Console.WriteLine(descricao);
+                }
+            }
         }
     }
 }
