@@ -22,7 +22,9 @@ namespace DominandoEFCore
 
             //FuncaoDataLength();
 
-            FuncaoProperty();
+            //FuncaoProperty();
+
+            FuncaoCollate();
         }
 
         public static void FuncoesDeDatas()
@@ -139,6 +141,20 @@ namespace DominandoEFCore
 
                 Console.WriteLine("Resultado:");
                 Console.WriteLine(_propriedadeSombra);
+            }
+        }
+
+        public static void FuncaoCollate()
+        {
+            using (ApplicationContext db = new ApplicationContext())
+            {
+                Funcao _consulta1 = db.Funcoes.FirstOrDefault(funcao => EF.Functions.Collate(funcao.Descricao1, "SQL_Latin1_General_CP1_CS_AS") == "tela"); //CS = Case Sensitive
+
+                Funcao _consulta2 = db.Funcoes.FirstOrDefault(funcao => EF.Functions.Collate(funcao.Descricao1, "SQL_Latin1_General_CP1_CI_AS") == "tela"); //CI = Case Insensitive
+
+                Console.WriteLine($"Consulta1: {_consulta1?.Descricao1}");
+                
+                Console.WriteLine($"Consulta1: {_consulta2?.Descricao2}");
             }
         }
     }
