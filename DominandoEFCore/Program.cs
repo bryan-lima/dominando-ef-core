@@ -34,6 +34,7 @@ namespace DominandoEFCore
                     new 
                     {
                         Dias = EF.Functions.DateDiffDay(DateTime.Now, funcao.Data1),
+                        Meses = EF.Functions.DateDiffMonth(DateTime.Now, funcao.Data1),
                         Data = EF.Functions.DateFromParts(2021, 1, 2),
                         DataValida = EF.Functions.IsDate(funcao.Data2)
                     });
