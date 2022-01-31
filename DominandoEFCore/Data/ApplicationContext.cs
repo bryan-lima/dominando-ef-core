@@ -30,7 +30,12 @@ namespace DominandoEFCore.Data
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            
+            modelBuilder.Entity<Funcao>(conf => 
+            {
+                conf.Property<string>("PropriedadeSombra")
+                    .HasColumnType("VARCHAR(100)")
+                    .HasDefaultValueSql("'Teste'");
+            });
         }
     }
 }
