@@ -89,7 +89,8 @@ namespace DominandoEFCore
                 Console.WriteLine(_script);
 
                 string[] _dados = db.Funcoes.AsNoTracking()
-                                            .Where(funcao => EF.Functions.Like(funcao.Descricao1, "Bo%"))
+                                            //.Where(funcao => EF.Functions.Like(funcao.Descricao1, "Bo%"))
+                                            .Where(funcao => EF.Functions.Like(funcao.Descricao1, "B[ao]%"))
                                             .Select(funcao => funcao.Descricao1)
                                             .ToArray();
 
