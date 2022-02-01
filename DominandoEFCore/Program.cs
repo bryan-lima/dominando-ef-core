@@ -23,7 +23,8 @@ namespace DominandoEFCore
         {
             using (ApplicationContext db = new ApplicationContext())
             {
-                Funcao _consulta = db.Funcoes.FirstOrDefault();
+                Funcao _consulta = db.Funcoes.TagWith("Use NOLOCK")
+                                             .FirstOrDefault();
 
                 Console.WriteLine($"Consulta: {_consulta?.Descricao1}");
             }

@@ -31,7 +31,7 @@ namespace DominandoEFCore.Interceptadores
 
         private static void UsarNoLock(DbCommand command)
         {
-            if (!command.CommandText.Contains("WITH (NOLOCK)"))
+            if (!command.CommandText.Contains("WITH (NOLOCK)") && command.CommandText.StartsWith("-- Use NOLOCK"))
             {
                 command.CommandText = _tableRegex.Replace(command.CommandText, "${tableAlias} WITH (NOLOCK)");
             }
