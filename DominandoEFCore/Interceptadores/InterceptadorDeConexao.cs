@@ -19,7 +19,7 @@ namespace DominandoEFCore.Interceptadores
 
             Console.WriteLine(connectionString);
 
-            var connectionStringBuilder = new SqlConnectionStringBuilder(connectionString) 
+            SqlConnectionStringBuilder connectionStringBuilder = new SqlConnectionStringBuilder(connectionString) 
             {
                 //DataSource = "IP Segundo Servidor",
                 ApplicationName = "CursoEFCore"

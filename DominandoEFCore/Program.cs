@@ -16,7 +16,9 @@ namespace DominandoEFCore
     {
         static void Main(string[] args)
         {
-            TesteInterceptacao();
+            //TesteInterceptacao();
+
+            TesteInterceptacaoSaveChanges();
         }
 
         static void TesteInterceptacao()
@@ -27,6 +29,22 @@ namespace DominandoEFCore
                                              .FirstOrDefault();
 
                 Console.WriteLine($"Consulta: {_consulta?.Descricao1}");
+            }
+        }
+
+        static void TesteInterceptacaoSaveChanges()
+        {
+            using (ApplicationContext db = new ApplicationContext())
+            {
+                db.Database.EnsureDeleted();
+                db.Database.EnsureCreated();
+
+                db.Funcoes.Add(new Funcao 
+                {
+                    Descricao1 = "Teste"
+                });
+
+                db.SaveChanges();
             }
         }
     }
