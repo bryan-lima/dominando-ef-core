@@ -25,7 +25,8 @@ namespace DominandoEFCore.Data
 
             optionsBuilder.UseSqlServer(strConnection)
                           .LogTo(Console.WriteLine, LogLevel.Information)
-                          .EnableSensitiveDataLogging();
+                          .EnableSensitiveDataLogging()
+                          .AddInterceptors(new Interceptadores.InterceptadorDeComandos());
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
