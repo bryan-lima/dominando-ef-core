@@ -16,33 +16,42 @@ namespace DominandoEFCore
     {
         static void Main(string[] args)
         {
-            //TesteInterceptacao();
-
-            TesteInterceptacaoSaveChanges();
+            ComportamentoPadrao();
         }
 
-        static void TesteInterceptacao()
-        {
-            using (ApplicationContext db = new ApplicationContext())
-            {
-                Funcao _consulta = db.Funcoes.TagWith("Use NOLOCK")
-                                             .FirstOrDefault();
-
-                Console.WriteLine($"Consulta: {_consulta?.Descricao1}");
-            }
-        }
-
-        static void TesteInterceptacaoSaveChanges()
+        static void CadastrarLivro()
         {
             using (ApplicationContext db = new ApplicationContext())
             {
                 db.Database.EnsureDeleted();
                 db.Database.EnsureCreated();
 
-                db.Funcoes.Add(new Funcao 
-                {
-                    Descricao1 = "Teste"
-                });
+                db.Livros.Add(
+                    new Livro 
+                    {
+                        Titulo = "Introdução ao Entity Framework Core",
+                        Autor = "Bryan"
+                    });
+
+                db.SaveChanges();
+            }
+        }
+
+        static void ComportamentoPadrao()
+        {
+            CadastrarLivro();
+
+            using (ApplicationContext db = new ApplicationContext())
+            {
+                var _livro = db.Livros.FirstOrDefault(livro => livro.Id == 1);
+                _livro.Autor = "Bryan Lima";
+
+                db.Livros.Add(
+                    new Livro 
+                    {
+                        Titulo = "Dominando o Entity Framework Core",
+                        Autor = "Bryan Lima"
+                    });
 
                 db.SaveChanges();
             }
