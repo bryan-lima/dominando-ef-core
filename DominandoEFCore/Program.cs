@@ -16,7 +16,9 @@ namespace DominandoEFCore
     {
         static void Main(string[] args)
         {
-            ComportamentoPadrao();
+            //ComportamentoPadrao();
+
+            GerenciandoTransacaoManualmente();
         }
 
         static void CadastrarLivro()
@@ -54,6 +56,32 @@ namespace DominandoEFCore
                     });
 
                 db.SaveChanges();
+            }
+        }
+
+        static void GerenciandoTransacaoManualmente()
+        {
+            CadastrarLivro();
+
+            using (ApplicationContext db = new ApplicationContext())
+            {
+                IDbContextTransaction _transacao = db.Database.BeginTransaction();
+
+                Livro _livro = db.Livros.FirstOrDefault(livro => livro.Id == 1);
+                _livro.Autor = "Bryan Lima";
+                db.SaveChanges();
+
+                Console.ReadKey();
+
+                db.Livros.Add(
+                    new Livro
+                    {
+                        Titulo = "Dominando o Entity Framework Core",
+                        Autor = "Bryan Lima"
+                    });
+
+                db.SaveChanges();
+                _transacao.Commit();
             }
         }
     }
