@@ -174,7 +174,13 @@ namespace DominandoEFCore
         {
             CadastrarLivro();
 
-            using (TransactionScope transactionScope = new TransactionScope())
+            TransactionOptions _transactionOptions = new TransactionOptions 
+            {
+                IsolationLevel = IsolationLevel.ReadCommitted,
+                //Timeout = 
+            };
+
+            using (TransactionScope transactionScope = new TransactionScope(TransactionScopeOption.Required, _transactionOptions))
             {
                 ConsultarAtualizar();
                 CadastrarLivroEnterprise();
