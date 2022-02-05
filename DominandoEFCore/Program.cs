@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Text.Json;
+using System.Transactions;
 
 namespace DominandoEFCore
 {
@@ -22,7 +23,9 @@ namespace DominandoEFCore
 
             //ReverterTransacao();
 
-            SalvarPontoTransacao();
+            //SalvarPontoTransacao();
+
+            TransactionScope();
         }
 
         static void CadastrarLivro()
@@ -164,6 +167,60 @@ namespace DominandoEFCore
                         _transacao.Commit();
                     }
                 }
+            }
+        }
+
+        static void TransactionScope()
+        {
+            CadastrarLivro();
+
+            using (TransactionScope transactionScope = new TransactionScope())
+            {
+                ConsultarAtualizar();
+                CadastrarLivroEnterprise();
+                CadastrarLivroDominandoEFCore();
+
+                transactionScope.Complete();
+            }
+        }
+
+        static void CadastrarLivroDominandoEFCore()
+        {
+            using (ApplicationContext db = new ApplicationContext())
+            {
+                db.Livros.Add(
+                    new Livro
+                    {
+                        Titulo = "Introdução ao Entity Framework Core",
+                        Autor = "Bryan Lima"
+                    });
+
+                db.SaveChanges();
+            }
+        }
+
+        static void CadastrarLivroEnterprise()
+        {
+            using (ApplicationContext db = new ApplicationContext())
+            {
+                db.Livros.Add(
+                    new Livro
+                    {
+                        Titulo = "ASP.NET Core Enterprise Applications",
+                        Autor = "Eduardo Pires"
+                    });
+
+                db.SaveChanges();
+            }
+        }
+
+        static void ConsultarAtualizar()
+        {
+            using (ApplicationContext db = new ApplicationContext())
+            {
+                Livro _livro = db.Livros.FirstOrDefault(livro => livro.Id == 1);
+                _livro.Autor = "Bryan Lima";
+                db.SaveChanges();
             }
         }
     }
