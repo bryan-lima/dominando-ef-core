@@ -18,7 +18,9 @@ namespace DominandoEFCore
         {
             //ComportamentoPadrao();
 
-            GerenciandoTransacaoManualmente();
+            //GerenciandoTransacaoManualmente();
+
+            ReverterTransacao();
         }
 
         static void CadastrarLivro()
@@ -29,7 +31,7 @@ namespace DominandoEFCore
                 db.Database.EnsureCreated();
 
                 db.Livros.Add(
-                    new Livro 
+                    new Livro
                     {
                         Titulo = "Introdução ao Entity Framework Core",
                         Autor = "Bryan"
@@ -49,7 +51,7 @@ namespace DominandoEFCore
                 _livro.Autor = "Bryan Lima";
 
                 db.Livros.Add(
-                    new Livro 
+                    new Livro
                     {
                         Titulo = "Dominando o Entity Framework Core",
                         Autor = "Bryan Lima"
@@ -82,6 +84,37 @@ namespace DominandoEFCore
 
                 db.SaveChanges();
                 _transacao.Commit();
+            }
+        }
+
+        static void ReverterTransacao()
+        {
+            CadastrarLivro();
+
+            using (ApplicationContext db = new ApplicationContext())
+            {
+                IDbContextTransaction _transacao = db.Database.BeginTransaction();
+
+                try
+                {
+                    Livro _livro = db.Livros.FirstOrDefault(livro => livro.Id == 1);
+                    _livro.Autor = "Bryan Lima";
+                    db.SaveChanges();
+
+                    db.Livros.Add(
+                        new Livro
+                        {
+                            Titulo = "Dominando o Entity Framework Core",
+                            Autor = "Bryan Lima".PadLeft(16, '*')
+                        });
+
+                    db.SaveChanges();
+                    _transacao.Commit();
+                }
+                catch (Exception ex)
+                {
+                    _transacao.Rollback();
+                }
             }
         }
     }
