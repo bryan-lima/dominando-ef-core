@@ -4,6 +4,7 @@ using DominandoEFCore.Domain;
 using DominandoEFCore.Funcoes;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
+using Microsoft.EntityFrameworkCore.Query.SqlExpressions;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Microsoft.Extensions.Logging;
 using System;
@@ -43,6 +44,15 @@ namespace DominandoEFCore.Data
 
             modelBuilder.HasDbFunction(_dateDiff)
                         .HasName("DATEDIFF")
+                        .HasTranslation(p => 
+                        {
+                            List<SqlExpression> argumentos = p.ToList();
+
+                            SqlConstantExpression constante = (SqlConstantExpression)argumentos[0];
+                            argumentos[0] = new SqlFragmentExpression(constante.Value.ToString());
+
+                            return new SqlFunctionExpression("DATEDIFF", argumentos, false, new[] { false, false, false }, typeof(int), null);
+                        })
                         .IsBuiltIn();
         }
 
