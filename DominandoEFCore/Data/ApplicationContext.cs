@@ -27,5 +27,11 @@ namespace DominandoEFCore.Data
                           .LogTo(Console.WriteLine, LogLevel.Information)
                           .EnableSensitiveDataLogging();
         }
+
+        [DbFunction(name: "Left", schema: "", IsBuiltIn = true)]
+        public static string Left(string dados, int quantidade)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
