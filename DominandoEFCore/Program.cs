@@ -20,7 +20,9 @@ namespace DominandoEFCore
         {
             //FuncaoLEFT();
 
-            FuncadoDefinidaPeloUsuario();
+            //FuncadoDefinidaPeloUsuario();
+
+            DateDIFF();
         }
 
         static void FuncaoLEFT()
@@ -48,7 +50,8 @@ namespace DominandoEFCore
                     new Livro
                     {
                         Titulo = "Introdução ao Entity Framework Core",
-                        Autor = "Bryan"
+                        Autor = "Bryan",
+                        CadastradoEm = DateTime.Now.AddDays(-1)
                     });
 
                 db.SaveChanges();
@@ -73,6 +76,20 @@ namespace DominandoEFCore
             foreach (string parteTitulo in _resultado)
             {
                 Console.WriteLine(parteTitulo);
+            }
+        }
+
+        static void DateDIFF()
+        {
+            CadastrarLivro();
+
+            using var db = new ApplicationContext();
+
+            IQueryable<int> _resultado = db.Livros.Select(livro => EF.Functions.DateDiffDay(livro.CadastradoEm, DateTime.Now));
+
+            foreach (int diff in _resultado)
+            {
+                Console.WriteLine(diff);
             }
         }
     }
