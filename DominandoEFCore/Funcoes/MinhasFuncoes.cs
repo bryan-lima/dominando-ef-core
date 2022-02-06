@@ -25,5 +25,10 @@ namespace DominandoEFCore.Funcoes
                 modelBuilder.HasDbFunction(funcao);
             }
         }
+
+        public static string LetrasMaiusculas(string dados)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
