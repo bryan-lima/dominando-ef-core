@@ -18,7 +18,9 @@ namespace DominandoEFCore
     {
         static void Main(string[] args)
         {
-            FuncaoLEFT();
+            //FuncaoLEFT();
+
+            FuncadoDefinidaPeloUsuario();
         }
 
         static void FuncaoLEFT()
@@ -50,6 +52,27 @@ namespace DominandoEFCore
                     });
 
                 db.SaveChanges();
+            }
+        }
+
+        static void FuncadoDefinidaPeloUsuario()
+        {
+            CadastrarLivro();
+
+            using ApplicationContext db = new ApplicationContext();
+
+            db.Database.ExecuteSqlRaw(@"
+                CREATE FUNCTION ConverterParaLetrasMaiusculas(@dados VARCHAR(100))
+                RETURNS VARCHAR(100)
+                BEGIN
+                    RETURN UPPER(@dados)
+                END");
+
+            IQueryable<string> _resultado = db.Livros.Select(livro => MinhasFuncoes.LetrasMaiusculas(livro.Titulo));
+
+            foreach (string parteTitulo in _resultado)
+            {
+                Console.WriteLine(parteTitulo);
             }
         }
     }

@@ -36,9 +36,15 @@ namespace DominandoEFCore.Data
             modelBuilder.HasDbFunction(_minhaFuncao)
                         .HasName("LEFT")
                         .IsBuiltIn();
+
+            modelBuilder.HasDbFunction(_letrasMaiusculas)
+                        .HasName("ConverterParaLetrasMaiusculas")   // Nome da função que será criada na base de dados
+                        .HasSchema("dbo");
         }
 
         private static MethodInfo _minhaFuncao = typeof(MinhasFuncoes).GetRuntimeMethod("Left", new[] { typeof(string), typeof(int) });
+
+        private static MethodInfo _letrasMaiusculas = typeof(MinhasFuncoes).GetRuntimeMethod(nameof(MinhasFuncoes.LetrasMaiusculas), new[] { typeof(string) });
 
         //[DbFunction(name: "Left", schema: "", IsBuiltIn = true)]
         //public static string Left(string dados, int quantidade)
