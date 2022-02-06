@@ -40,11 +40,17 @@ namespace DominandoEFCore.Data
             modelBuilder.HasDbFunction(_letrasMaiusculas)
                         .HasName("ConverterParaLetrasMaiusculas")   // Nome da função que será criada na base de dados
                         .HasSchema("dbo");
+
+            modelBuilder.HasDbFunction(_dateDiff)
+                        .HasName("DATEDIFF")
+                        .IsBuiltIn();
         }
 
         private static MethodInfo _minhaFuncao = typeof(MinhasFuncoes).GetRuntimeMethod("Left", new[] { typeof(string), typeof(int) });
 
         private static MethodInfo _letrasMaiusculas = typeof(MinhasFuncoes).GetRuntimeMethod(nameof(MinhasFuncoes.LetrasMaiusculas), new[] { typeof(string) });
+
+        private static MethodInfo _dateDiff = typeof(MinhasFuncoes).GetRuntimeMethod(nameof(MinhasFuncoes.DateDiff), new[] { typeof(string), typeof(DateTime), typeof(DateTime) });
 
         //[DbFunction(name: "Left", schema: "", IsBuiltIn = true)]
         //public static string Left(string dados, int quantidade)

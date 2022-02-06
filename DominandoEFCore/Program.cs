@@ -85,7 +85,9 @@ namespace DominandoEFCore
 
             using var db = new ApplicationContext();
 
-            IQueryable<int> _resultado = db.Livros.Select(livro => EF.Functions.DateDiffDay(livro.CadastradoEm, DateTime.Now));
+            //IQueryable<int> _resultado = db.Livros.Select(livro => EF.Functions.DateDiffDay(livro.CadastradoEm, DateTime.Now));
+
+            IQueryable<int> _resultado = db.Livros.Select(livro => MinhasFuncoes.DateDiff("DAY", livro.CadastradoEm, DateTime.Now));
 
             foreach (int diff in _resultado)
             {

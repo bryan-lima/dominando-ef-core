@@ -30,5 +30,10 @@ namespace DominandoEFCore.Funcoes
         {
             throw new NotImplementedException();
         }
+
+        public static int DateDiff(string identificador, DateTime dataInicial, DateTime dataFinal)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
