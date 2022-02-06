@@ -31,8 +31,14 @@ namespace DominandoEFCore.Data
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            MinhasFuncoes.RegistrarFuncoes(modelBuilder);
+            //MinhasFuncoes.RegistrarFuncoes(modelBuilder);
+
+            modelBuilder.HasDbFunction(_minhaFuncao)
+                        .HasName("LEFT")
+                        .IsBuiltIn();
         }
+
+        private static MethodInfo _minhaFuncao = typeof(MinhasFuncoes).GetRuntimeMethod("Left", new[] { typeof(string), typeof(int) });
 
         //[DbFunction(name: "Left", schema: "", IsBuiltIn = true)]
         //public static string Left(string dados, int quantidade)
