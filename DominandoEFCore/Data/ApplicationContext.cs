@@ -1,6 +1,7 @@
 ﻿using DominandoEFCore.Configurations;
 using DominandoEFCore.Conversores;
 using DominandoEFCore.Domain;
+using DominandoEFCore.Funcoes;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
@@ -28,10 +29,15 @@ namespace DominandoEFCore.Data
                           .EnableSensitiveDataLogging();
         }
 
-        [DbFunction(name: "Left", schema: "", IsBuiltIn = true)]
-        public static string Left(string dados, int quantidade)
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            throw new NotImplementedException();
+            MinhasFuncoes.RegistrarFuncoes(modelBuilder);
         }
+
+        //[DbFunction(name: "Left", schema: "", IsBuiltIn = true)]
+        //public static string Left(string dados, int quantidade)
+        //{
+        //    throw new NotImplementedException();
+        //}
     }
 }

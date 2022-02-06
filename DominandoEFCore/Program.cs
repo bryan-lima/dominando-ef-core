@@ -1,5 +1,6 @@
 ﻿using DominandoEFCore.Data;
 using DominandoEFCore.Domain;
+using DominandoEFCore.Funcoes;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
@@ -26,7 +27,7 @@ namespace DominandoEFCore
 
             using ApplicationContext _db = new ApplicationContext();
 
-            IQueryable<string> _resultado = _db.Livros.Select(livro => ApplicationContext.Left(livro.Titulo, 10));
+            IQueryable<string> _resultado = _db.Livros.Select(livro => MinhasFuncoes.Left(livro.Titulo, 10));
 
             foreach (var parteTitulo in _resultado)
             {
