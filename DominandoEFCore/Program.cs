@@ -1,5 +1,6 @@
 ﻿using DominandoEFCore.Data;
 using DominandoEFCore.Domain;
+using DominandoEFCore.Funcoes;
 using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
@@ -17,15 +18,25 @@ namespace DominandoEFCore
     {
         static void Main(string[] args)
         {
-            //ComportamentoPadrao();
+            //FuncaoLEFT();
 
-            //GerenciandoTransacaoManualmente();
+            //FuncadoDefinidaPeloUsuario();
 
-            //ReverterTransacao();
+            DateDIFF();
+        }
 
-            //SalvarPontoTransacao();
+        static void FuncaoLEFT()
+        {
+            CadastrarLivro();
 
-            TransactionScope();
+            using ApplicationContext _db = new ApplicationContext();
+
+            IQueryable<string> _resultado = _db.Livros.Select(livro => MinhasFuncoes.Left(livro.Titulo, 10));
+
+            foreach (var parteTitulo in _resultado)
+            {
+                Console.WriteLine(parteTitulo);
+            }
         }
 
         static void CadastrarLivro()
@@ -39,194 +50,48 @@ namespace DominandoEFCore
                     new Livro
                     {
                         Titulo = "Introdução ao Entity Framework Core",
-                        Autor = "Bryan"
+                        Autor = "Bryan",
+                        CadastradoEm = DateTime.Now.AddDays(-1)
                     });
 
                 db.SaveChanges();
             }
         }
 
-        static void ComportamentoPadrao()
+        static void FuncadoDefinidaPeloUsuario()
         {
             CadastrarLivro();
 
-            using (ApplicationContext db = new ApplicationContext())
+            using ApplicationContext db = new ApplicationContext();
+
+            db.Database.ExecuteSqlRaw(@"
+                CREATE FUNCTION ConverterParaLetrasMaiusculas(@dados VARCHAR(100))
+                RETURNS VARCHAR(100)
+                BEGIN
+                    RETURN UPPER(@dados)
+                END");
+
+            IQueryable<string> _resultado = db.Livros.Select(livro => MinhasFuncoes.LetrasMaiusculas(livro.Titulo));
+
+            foreach (string parteTitulo in _resultado)
             {
-                var _livro = db.Livros.FirstOrDefault(livro => livro.Id == 1);
-                _livro.Autor = "Bryan Lima";
-
-                db.Livros.Add(
-                    new Livro
-                    {
-                        Titulo = "Dominando o Entity Framework Core",
-                        Autor = "Bryan Lima"
-                    });
-
-                db.SaveChanges();
+                Console.WriteLine(parteTitulo);
             }
         }
 
-        static void GerenciandoTransacaoManualmente()
+        static void DateDIFF()
         {
             CadastrarLivro();
 
-            using (ApplicationContext db = new ApplicationContext())
+            using var db = new ApplicationContext();
+
+            //IQueryable<int> _resultado = db.Livros.Select(livro => EF.Functions.DateDiffDay(livro.CadastradoEm, DateTime.Now));
+
+            IQueryable<int> _resultado = db.Livros.Select(livro => MinhasFuncoes.DateDiff("DAY", livro.CadastradoEm, DateTime.Now));
+
+            foreach (int diff in _resultado)
             {
-                IDbContextTransaction _transacao = db.Database.BeginTransaction();
-
-                Livro _livro = db.Livros.FirstOrDefault(livro => livro.Id == 1);
-                _livro.Autor = "Bryan Lima";
-                db.SaveChanges();
-
-                Console.ReadKey();
-
-                db.Livros.Add(
-                    new Livro
-                    {
-                        Titulo = "Dominando o Entity Framework Core",
-                        Autor = "Bryan Lima"
-                    });
-
-                db.SaveChanges();
-                _transacao.Commit();
-            }
-        }
-
-        static void ReverterTransacao()
-        {
-            CadastrarLivro();
-
-            using (ApplicationContext db = new ApplicationContext())
-            {
-                IDbContextTransaction _transacao = db.Database.BeginTransaction();
-
-                try
-                {
-                    Livro _livro = db.Livros.FirstOrDefault(livro => livro.Id == 1);
-                    _livro.Autor = "Bryan Lima";
-                    db.SaveChanges();
-
-                    db.Livros.Add(
-                        new Livro
-                        {
-                            Titulo = "Dominando o Entity Framework Core",
-                            Autor = "Bryan Lima".PadLeft(16, '*')
-                        });
-
-                    db.SaveChanges();
-                    _transacao.Commit();
-                }
-                catch (Exception ex)
-                {
-                    _transacao.Rollback();
-                }
-            }
-        }
-
-        static void SalvarPontoTransacao()
-        {
-            CadastrarLivro();
-
-            using (ApplicationContext db = new ApplicationContext())
-            {
-                IDbContextTransaction _transacao = db.Database.BeginTransaction();
-
-                try
-                {
-                    Livro _livro = db.Livros.FirstOrDefault(livro => livro.Id == 1);
-                    _livro.Autor = "Bryan Lima";
-                    db.SaveChanges();
-
-                    _transacao.CreateSavepoint("desfazer_apenas_insercao");
-
-                    db.Livros.Add(
-                        new Livro
-                        {
-                            Titulo = "ASP.NET Core Enterprise Applications",
-                            Autor = "Eduardo Pires"
-                        });
-
-                    db.SaveChanges();
-
-                    db.Livros.Add(
-                        new Livro
-                        {
-                            Titulo = "Dominando o Entity Framework Core",
-                            Autor = "Bryan Lima".PadLeft(16, '*')
-                        });
-
-                    db.SaveChanges();
-                    _transacao.Commit();
-                }
-                catch (DbUpdateException ex)
-                {
-                    _transacao.RollbackToSavepoint("desfazer_apenas_insercao");
-
-                    if (ex.Entries.Count(entityEntry => entityEntry.State == EntityState.Added) == ex.Entries.Count)
-                    {
-                        _transacao.Commit();
-                    }
-                }
-            }
-        }
-
-        static void TransactionScope()
-        {
-            CadastrarLivro();
-
-            TransactionOptions _transactionOptions = new TransactionOptions 
-            {
-                IsolationLevel = IsolationLevel.ReadCommitted,
-                //Timeout = 
-            };
-
-            using (TransactionScope transactionScope = new TransactionScope(TransactionScopeOption.Required, _transactionOptions))
-            {
-                ConsultarAtualizar();
-                CadastrarLivroEnterprise();
-                CadastrarLivroDominandoEFCore();
-
-                transactionScope.Complete();
-            }
-        }
-
-        static void CadastrarLivroDominandoEFCore()
-        {
-            using (ApplicationContext db = new ApplicationContext())
-            {
-                db.Livros.Add(
-                    new Livro
-                    {
-                        Titulo = "Introdução ao Entity Framework Core",
-                        Autor = "Bryan Lima"
-                    });
-
-                db.SaveChanges();
-            }
-        }
-
-        static void CadastrarLivroEnterprise()
-        {
-            using (ApplicationContext db = new ApplicationContext())
-            {
-                db.Livros.Add(
-                    new Livro
-                    {
-                        Titulo = "ASP.NET Core Enterprise Applications",
-                        Autor = "Eduardo Pires"
-                    });
-
-                db.SaveChanges();
-            }
-        }
-
-        static void ConsultarAtualizar()
-        {
-            using (ApplicationContext db = new ApplicationContext())
-            {
-                Livro _livro = db.Livros.FirstOrDefault(livro => livro.Id == 1);
-                _livro.Autor = "Bryan Lima";
-                db.SaveChanges();
+                Console.WriteLine(diff);
             }
         }
     }
