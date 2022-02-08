@@ -20,7 +20,9 @@ namespace DominandoEFCore
         {
             //Setup();
 
-            ConsultaRastreada();
+            //ConsultaRastreada();
+
+            ConsultaNaoRastreada();
         }
 
         static void Setup()
@@ -50,6 +52,15 @@ namespace DominandoEFCore
             using ApplicationContext db = new ApplicationContext();
 
             List<Funcionario> _funcionarios = db.Funcionarios.Include(funcionario => funcionario.Departamento)
+                                                             .ToList();
+        }
+
+        static void ConsultaNaoRastreada()
+        {
+            using ApplicationContext db = new ApplicationContext();
+
+            List<Funcionario> _funcionarios = db.Funcionarios.AsNoTracking()
+                                                             .Include(funcionario => funcionario.Departamento)
                                                              .ToList();
         }
     }
