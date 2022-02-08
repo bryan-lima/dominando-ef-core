@@ -24,7 +24,9 @@ namespace DominandoEFCore
 
             //ConsultaNaoRastreada();
 
-            ConsultaComResolucaoDeIdentidade();
+            //ConsultaComResolucaoDeIdentidade();
+
+            ConsultaProjetadaERastreada();
         }
 
         static void Setup()
@@ -83,6 +85,23 @@ namespace DominandoEFCore
 
             List<Funcionario> _funcionarios = db.Funcionarios.Include(funcionario => funcionario.Departamento)
                                                              .ToList();
+        }
+
+        static void ConsultaProjetadaERastreada()
+        {
+            using ApplicationContext db = new ApplicationContext();
+
+            var _departamentos = db.Departamentos.Include(departamento => departamento.Funcionarios)
+                                                 .Select(departamento => new
+                                                 {
+                                                     Departamento = departamento,
+                                                     TotalFuncionarios = departamento.Funcionarios.Count()
+                                                 })
+                                                 .ToList();
+
+            _departamentos[0].Departamento.Descricao = "Departamento Teste Atualizado";
+
+            db.SaveChanges();
         }
     }
 }
