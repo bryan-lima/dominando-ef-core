@@ -18,7 +18,9 @@ namespace DominandoEFCore
     {
         static void Main(string[] args)
         {
-            Setup();
+            //Setup();
+
+            ConsultaRastreada();
         }
 
         static void Setup()
@@ -28,7 +30,7 @@ namespace DominandoEFCore
             db.Database.EnsureCreated();
 
             db.Departamentos.Add(new Departamento 
-            {
+            { 
                 Descricao = "Departamento Teste",
                 Ativo = true,
                 Funcionarios = Enumerable.Range(1, 100)
@@ -41,6 +43,14 @@ namespace DominandoEFCore
             });
 
             db.SaveChanges();
+        }
+
+        static void ConsultaRastreada()
+        {
+            using ApplicationContext db = new ApplicationContext();
+
+            List<Funcionario> _funcionarios = db.Funcionarios.Include(funcionario => funcionario.Departamento)
+                                                             .ToList();
         }
     }
 }
