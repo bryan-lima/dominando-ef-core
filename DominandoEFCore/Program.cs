@@ -74,5 +74,15 @@ namespace DominandoEFCore
                                                              .Include(funcionario => funcionario.Departamento)
                                                              .ToList();
         }
+
+        static void ConsultaCustomizada()
+        {
+            using ApplicationContext db = new ApplicationContext();
+
+            db.ChangeTracker.QueryTrackingBehavior = QueryTrackingBehavior.TrackAll;
+
+            List<Funcionario> _funcionarios = db.Funcionarios.Include(funcionario => funcionario.Departamento)
+                                                             .ToList();
+        }
     }
 }
