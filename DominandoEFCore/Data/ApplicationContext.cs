@@ -4,6 +4,7 @@ using DominandoEFCore.Domain;
 using DominandoEFCore.Funcoes;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
+using Microsoft.EntityFrameworkCore.Query.SqlExpressions;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Microsoft.Extensions.Logging;
 using System;
@@ -40,11 +41,26 @@ namespace DominandoEFCore.Data
             modelBuilder.HasDbFunction(_letrasMaiusculas)
                         .HasName("ConverterParaLetrasMaiusculas")   // Nome da função que será criada na base de dados
                         .HasSchema("dbo");
+
+            modelBuilder.HasDbFunction(_dateDiff)
+                        .HasName("DATEDIFF")
+                        .HasTranslation(p => 
+                        {
+                            List<SqlExpression> argumentos = p.ToList();
+
+                            SqlConstantExpression constante = (SqlConstantExpression)argumentos[0];
+                            argumentos[0] = new SqlFragmentExpression(constante.Value.ToString());
+
+                            return new SqlFunctionExpression("DATEDIFF", argumentos, false, new[] { false, false, false }, typeof(int), null);
+                        })
+                        .IsBuiltIn();
         }
 
         private static MethodInfo _minhaFuncao = typeof(MinhasFuncoes).GetRuntimeMethod("Left", new[] { typeof(string), typeof(int) });
 
         private static MethodInfo _letrasMaiusculas = typeof(MinhasFuncoes).GetRuntimeMethod(nameof(MinhasFuncoes.LetrasMaiusculas), new[] { typeof(string) });
+
+        private static MethodInfo _dateDiff = typeof(MinhasFuncoes).GetRuntimeMethod(nameof(MinhasFuncoes.DateDiff), new[] { typeof(string), typeof(DateTime), typeof(DateTime) });
 
         //[DbFunction(name: "Left", schema: "", IsBuiltIn = true)]
         //public static string Left(string dados, int quantidade)
