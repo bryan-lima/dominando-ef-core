@@ -26,7 +26,9 @@ namespace DominandoEFCore
 
             //ConsultaComResolucaoDeIdentidade();
 
-            ConsultaProjetadaERastreada();
+            //ConsultaProjetadaERastreada();
+
+            Inserir200DepartamentosCom1MB();
         }
 
         static void Setup()
@@ -102,6 +104,33 @@ namespace DominandoEFCore
             _departamentos[0].Departamento.Descricao = "Departamento Teste Atualizado";
 
             db.SaveChanges();
+        }
+
+        static void Inserir200DepartamentosCom1MB()
+        {
+            using ApplicationContext db = new ApplicationContext();
+            db.Database.EnsureDeleted();
+            db.Database.EnsureCreated();
+
+            Random _random = new Random();
+
+            db.Departamentos.AddRange(Enumerable.Range(1, 100)
+                                                .Select(numero => 
+                                                new Departamento 
+                                                { 
+                                                    Descricao = "Departamento Teste",
+                                                    Image = getBytes()
+                                                }));
+
+            db.SaveChanges();
+
+            byte[] getBytes()
+            {
+                byte[] _buffer = new byte[1024 + 1024];
+                _random.NextBytes(_buffer);
+
+                return _buffer;
+            }
         }
     }
 }
