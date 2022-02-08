@@ -18,81 +18,61 @@ namespace DominandoEFCore
     {
         static void Main(string[] args)
         {
-            //FuncaoLEFT();
+            //Setup();
 
-            //FuncadoDefinidaPeloUsuario();
+            //ConsultaRastreada();
 
-            DateDIFF();
+            //ConsultaNaoRastreada();
+
+            ConsultaComResolucaoDeIdentidade();
         }
 
-        static void FuncaoLEFT()
+        static void Setup()
         {
-            CadastrarLivro();
+            using ApplicationContext db = new ApplicationContext();
+            db.Database.EnsureDeleted();
+            db.Database.EnsureCreated();
 
-            using ApplicationContext _db = new ApplicationContext();
+            db.Departamentos.Add(new Departamento 
+            { 
+                Descricao = "Departamento Teste",
+                Ativo = true,
+                Funcionarios = Enumerable.Range(1, 100)
+                                         .Select(numero => new Funcionario
+                {
+                    Cpf = numero.ToString().PadLeft(11, '0'),
+                    Nome = $"Funcionário {numero}",
+                    Rg = numero.ToString()
+                }).ToList()
+            });
 
-            IQueryable<string> _resultado = _db.Livros.Select(livro => MinhasFuncoes.Left(livro.Titulo, 10));
-
-            foreach (var parteTitulo in _resultado)
-            {
-                Console.WriteLine(parteTitulo);
-            }
+            db.SaveChanges();
         }
 
-        static void CadastrarLivro()
+        static void ConsultaRastreada()
         {
-            using (ApplicationContext db = new ApplicationContext())
-            {
-                db.Database.EnsureDeleted();
-                db.Database.EnsureCreated();
-
-                db.Livros.Add(
-                    new Livro
-                    {
-                        Titulo = "Introdução ao Entity Framework Core",
-                        Autor = "Bryan",
-                        CadastradoEm = DateTime.Now.AddDays(-1)
-                    });
-
-                db.SaveChanges();
-            }
-        }
-
-        static void FuncadoDefinidaPeloUsuario()
-        {
-            CadastrarLivro();
-
             using ApplicationContext db = new ApplicationContext();
 
-            db.Database.ExecuteSqlRaw(@"
-                CREATE FUNCTION ConverterParaLetrasMaiusculas(@dados VARCHAR(100))
-                RETURNS VARCHAR(100)
-                BEGIN
-                    RETURN UPPER(@dados)
-                END");
-
-            IQueryable<string> _resultado = db.Livros.Select(livro => MinhasFuncoes.LetrasMaiusculas(livro.Titulo));
-
-            foreach (string parteTitulo in _resultado)
-            {
-                Console.WriteLine(parteTitulo);
-            }
+            List<Funcionario> _funcionarios = db.Funcionarios.Include(funcionario => funcionario.Departamento)
+                                                             .ToList();
         }
 
-        static void DateDIFF()
+        static void ConsultaNaoRastreada()
         {
-            CadastrarLivro();
+            using ApplicationContext db = new ApplicationContext();
 
-            using var db = new ApplicationContext();
+            List<Funcionario> _funcionarios = db.Funcionarios.AsNoTracking()
+                                                             .Include(funcionario => funcionario.Departamento)
+                                                             .ToList();
+        }
 
-            //IQueryable<int> _resultado = db.Livros.Select(livro => EF.Functions.DateDiffDay(livro.CadastradoEm, DateTime.Now));
+        static void ConsultaComResolucaoDeIdentidade()
+        {
+            using ApplicationContext db = new ApplicationContext();
 
-            IQueryable<int> _resultado = db.Livros.Select(livro => MinhasFuncoes.DateDiff("DAY", livro.CadastradoEm, DateTime.Now));
-
-            foreach (int diff in _resultado)
-            {
-                Console.WriteLine(diff);
-            }
+            List<Funcionario> _funcionarios = db.Funcionarios.AsNoTrackingWithIdentityResolution()
+                                                             .Include(funcionario => funcionario.Departamento)
+                                                             .ToList();
         }
     }
 }
