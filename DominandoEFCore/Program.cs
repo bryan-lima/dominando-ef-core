@@ -22,7 +22,9 @@ namespace DominandoEFCore
 
             //ConsultaRastreada();
 
-            ConsultaNaoRastreada();
+            //ConsultaNaoRastreada();
+
+            ConsultaComResolucaoDeIdentidade();
         }
 
         static void Setup()
@@ -60,6 +62,15 @@ namespace DominandoEFCore
             using ApplicationContext db = new ApplicationContext();
 
             List<Funcionario> _funcionarios = db.Funcionarios.AsNoTracking()
+                                                             .Include(funcionario => funcionario.Departamento)
+                                                             .ToList();
+        }
+
+        static void ConsultaComResolucaoDeIdentidade()
+        {
+            using ApplicationContext db = new ApplicationContext();
+
+            List<Funcionario> _funcionarios = db.Funcionarios.AsNoTrackingWithIdentityResolution()
                                                              .Include(funcionario => funcionario.Departamento)
                                                              .ToList();
         }
