@@ -139,7 +139,8 @@ namespace DominandoEFCore
         {
             using ApplicationContext db = new ApplicationContext();
 
-            Departamento[] _departamentos = db.Departamentos.ToArray();
+            //Departamento[] _departamentos = db.Departamentos.ToArray();
+            string[] _departamentos = db.Departamentos.Select(departamento => departamento.Descricao).ToArray();
 
             string _memoria = (Process.GetCurrentProcess().WorkingSet64 / 1024 / 1024) + " MB"; // Cálculo para verificar quantos MB, em média, o processo precisou para executar as tarefas
 
