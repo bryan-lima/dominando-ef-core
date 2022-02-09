@@ -18,81 +18,133 @@ namespace DominandoEFCore
     {
         static void Main(string[] args)
         {
-            //FuncaoLEFT();
+            //Setup();
 
-            //FuncadoDefinidaPeloUsuario();
+            //ConsultaRastreada();
 
-            DateDIFF();
+            //ConsultaNaoRastreada();
+
+            //ConsultaComResolucaoDeIdentidade();
+
+            //ConsultaProjetadaERastreada();
+
+            //Inserir200DepartamentosCom1MB();
+
+            ConsultaProjetada();
         }
 
-        static void FuncaoLEFT()
+        static void Setup()
         {
-            CadastrarLivro();
+            using ApplicationContext db = new ApplicationContext();
+            db.Database.EnsureDeleted();
+            db.Database.EnsureCreated();
 
-            using ApplicationContext _db = new ApplicationContext();
+            db.Departamentos.Add(new Departamento 
+            { 
+                Descricao = "Departamento Teste",
+                Ativo = true,
+                Funcionarios = Enumerable.Range(1, 100)
+                                         .Select(numero => new Funcionario
+                {
+                    Cpf = numero.ToString().PadLeft(11, '0'),
+                    Nome = $"Funcionário {numero}",
+                    Rg = numero.ToString()
+                }).ToList()
+            });
 
-            IQueryable<string> _resultado = _db.Livros.Select(livro => MinhasFuncoes.Left(livro.Titulo, 10));
-
-            foreach (var parteTitulo in _resultado)
-            {
-                Console.WriteLine(parteTitulo);
-            }
+            db.SaveChanges();
         }
 
-        static void CadastrarLivro()
+        static void ConsultaRastreada()
         {
-            using (ApplicationContext db = new ApplicationContext())
-            {
-                db.Database.EnsureDeleted();
-                db.Database.EnsureCreated();
-
-                db.Livros.Add(
-                    new Livro
-                    {
-                        Titulo = "Introdução ao Entity Framework Core",
-                        Autor = "Bryan",
-                        CadastradoEm = DateTime.Now.AddDays(-1)
-                    });
-
-                db.SaveChanges();
-            }
-        }
-
-        static void FuncadoDefinidaPeloUsuario()
-        {
-            CadastrarLivro();
-
             using ApplicationContext db = new ApplicationContext();
 
-            db.Database.ExecuteSqlRaw(@"
-                CREATE FUNCTION ConverterParaLetrasMaiusculas(@dados VARCHAR(100))
-                RETURNS VARCHAR(100)
-                BEGIN
-                    RETURN UPPER(@dados)
-                END");
+            List<Funcionario> _funcionarios = db.Funcionarios.Include(funcionario => funcionario.Departamento)
+                                                             .ToList();
+        }
 
-            IQueryable<string> _resultado = db.Livros.Select(livro => MinhasFuncoes.LetrasMaiusculas(livro.Titulo));
+        static void ConsultaNaoRastreada()
+        {
+            using ApplicationContext db = new ApplicationContext();
 
-            foreach (string parteTitulo in _resultado)
+            List<Funcionario> _funcionarios = db.Funcionarios.AsNoTracking()
+                                                             .Include(funcionario => funcionario.Departamento)
+                                                             .ToList();
+        }
+
+        static void ConsultaComResolucaoDeIdentidade()
+        {
+            using ApplicationContext db = new ApplicationContext();
+
+            List<Funcionario> _funcionarios = db.Funcionarios.AsNoTrackingWithIdentityResolution()
+                                                             .Include(funcionario => funcionario.Departamento)
+                                                             .ToList();
+        }
+
+        static void ConsultaCustomizada()
+        {
+            using ApplicationContext db = new ApplicationContext();
+
+            db.ChangeTracker.QueryTrackingBehavior = QueryTrackingBehavior.TrackAll;
+
+            List<Funcionario> _funcionarios = db.Funcionarios.Include(funcionario => funcionario.Departamento)
+                                                             .ToList();
+        }
+
+        static void ConsultaProjetadaERastreada()
+        {
+            using ApplicationContext db = new ApplicationContext();
+
+            var _departamentos = db.Departamentos.Include(departamento => departamento.Funcionarios)
+                                                 .Select(departamento => new
+                                                 {
+                                                     Departamento = departamento,
+                                                     TotalFuncionarios = departamento.Funcionarios.Count()
+                                                 })
+                                                 .ToList();
+
+            _departamentos[0].Departamento.Descricao = "Departamento Teste Atualizado";
+
+            db.SaveChanges();
+        }
+
+        static void Inserir200DepartamentosCom1MB()
+        {
+            using ApplicationContext db = new ApplicationContext();
+            db.Database.EnsureDeleted();
+            db.Database.EnsureCreated();
+
+            Random _random = new Random();
+
+            db.Departamentos.AddRange(Enumerable.Range(1, 200)
+                                                .Select(numero => 
+                                                new Departamento 
+                                                { 
+                                                    Descricao = "Departamento Teste",
+                                                    Image = getBytes()
+                                                }));
+
+            db.SaveChanges();
+
+            byte[] getBytes()
             {
-                Console.WriteLine(parteTitulo);
+                byte[] _buffer = new byte[1024 + 1024];
+                _random.NextBytes(_buffer);
+
+                return _buffer;
             }
         }
 
-        static void DateDIFF()
+        static void ConsultaProjetada()
         {
-            CadastrarLivro();
+            using ApplicationContext db = new ApplicationContext();
 
-            using var db = new ApplicationContext();
+            //Departamento[] _departamentos = db.Departamentos.ToArray();
+            string[] _departamentos = db.Departamentos.Select(departamento => departamento.Descricao).ToArray();
 
-            //IQueryable<int> _resultado = db.Livros.Select(livro => EF.Functions.DateDiffDay(livro.CadastradoEm, DateTime.Now));
+            string _memoria = (Process.GetCurrentProcess().WorkingSet64 / 1024 / 1024) + " MB"; // Cálculo para verificar quantos MB, em média, o processo precisou para executar as tarefas
 
-            IQueryable<int> _resultado = db.Livros.Select(livro => MinhasFuncoes.DateDiff("DAY", livro.CadastradoEm, DateTime.Now));
-
-            foreach (int diff in _resultado)
-            {
-                Console.WriteLine(diff);
-            }
+            Console.WriteLine(_memoria);
         }
     }
 }
