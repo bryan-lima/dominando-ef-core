@@ -114,7 +114,7 @@ namespace DominandoEFCore
 
             Random _random = new Random();
 
-            db.Departamentos.AddRange(Enumerable.Range(1, 100)
+            db.Departamentos.AddRange(Enumerable.Range(1, 200)
                                                 .Select(numero => 
                                                 new Departamento 
                                                 { 
