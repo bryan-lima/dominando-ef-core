@@ -26,7 +26,11 @@ namespace DominandoEFCore
 
             //ConsultaComResolucaoDeIdentidade();
 
-            ConsultaProjetadaERastreada();
+            //ConsultaProjetadaERastreada();
+
+            //Inserir200DepartamentosCom1MB();
+
+            ConsultaProjetada();
         }
 
         static void Setup()
@@ -102,6 +106,45 @@ namespace DominandoEFCore
             _departamentos[0].Departamento.Descricao = "Departamento Teste Atualizado";
 
             db.SaveChanges();
+        }
+
+        static void Inserir200DepartamentosCom1MB()
+        {
+            using ApplicationContext db = new ApplicationContext();
+            db.Database.EnsureDeleted();
+            db.Database.EnsureCreated();
+
+            Random _random = new Random();
+
+            db.Departamentos.AddRange(Enumerable.Range(1, 200)
+                                                .Select(numero => 
+                                                new Departamento 
+                                                { 
+                                                    Descricao = "Departamento Teste",
+                                                    Image = getBytes()
+                                                }));
+
+            db.SaveChanges();
+
+            byte[] getBytes()
+            {
+                byte[] _buffer = new byte[1024 + 1024];
+                _random.NextBytes(_buffer);
+
+                return _buffer;
+            }
+        }
+
+        static void ConsultaProjetada()
+        {
+            using ApplicationContext db = new ApplicationContext();
+
+            //Departamento[] _departamentos = db.Departamentos.ToArray();
+            string[] _departamentos = db.Departamentos.Select(departamento => departamento.Descricao).ToArray();
+
+            string _memoria = (Process.GetCurrentProcess().WorkingSet64 / 1024 / 1024) + " MB"; // Cálculo para verificar quantos MB, em média, o processo precisou para executar as tarefas
+
+            Console.WriteLine(_memoria);
         }
     }
 }
