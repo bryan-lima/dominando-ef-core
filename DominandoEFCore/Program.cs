@@ -28,7 +28,9 @@ namespace DominandoEFCore
 
             //ConsultaProjetadaERastreada();
 
-            Inserir200DepartamentosCom1MB();
+            //Inserir200DepartamentosCom1MB();
+
+            ConsultaProjetada();
         }
 
         static void Setup()
@@ -131,6 +133,17 @@ namespace DominandoEFCore
 
                 return _buffer;
             }
+        }
+
+        static void ConsultaProjetada()
+        {
+            using ApplicationContext db = new ApplicationContext();
+
+            Departamento[] _departamentos = db.Departamentos.ToArray();
+
+            string _memoria = (Process.GetCurrentProcess().WorkingSet64 / 1024 / 1024) + " MB"; // Cálculo para verificar quantos MB, em média, o processo precisou para executar as tarefas
+
+            Console.WriteLine(_memoria);
         }
     }
 }
